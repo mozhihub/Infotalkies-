@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <meta name="theme-color" content="#090b0e">
+
+  <title>InfoTalkies</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+  >
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="app">
+
+  <!-- HEADER -->
+  <header class="top-header" id="topHeader">
+
+    <div class="title-row">
+
+      <div class="brand">
+
+        <div class="brand-icon">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+
+        <div>
+          <h1>InfoTalkies</h1>
+          <span>Tech • AI • Apps • Projects</span>
+        </div>
+
+      </div>
+
+      <button
+        class="icon-btn"
+        id="menuBtn"
+        aria-label="More"
+      >
+        <i class="fa-solid fa-ellipsis-vertical"></i>
+      </button>
+
+    </div>
+
+    <div class="search-row">
+
+      <div class="search-box">
+
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+          id="globalSearch"
+          type="search"
+          placeholder="Search apps, websites, projects..."
+        >
+
+        <button
+          id="clearSearch"
+          class="clear-search"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+  <main class="main-scroll" id="mainScroll">
+
+    <!-- HOME -->
+    <section
+      class="page active"
+      data-page="home"
+    >
+
+      <div class="section-head">
+
+        <div>
+          <span class="eyebrow">WELCOME</span>
+          <h2>Explore & Discover</h2>
+        </div>
+
+        <button
+          class="small-btn"
+          data-action="settings"
+        >
+          <i class="fa-solid fa-sliders"></i>
+        </button>
+
+      </div>
+
+
+      <!-- HERO -->
+      <article class="hero-card searchable-card">
+
+        <img
+          class="hero-image"
+          src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1400&q=85"
+          alt="Gaming"
+          loading="eager"
+        >
+
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+
+          <span class="badge">
+            <i class="fa-solid fa-fire"></i>
+            FEATURED
+          </span>
+
+          <h2>
+            Ultra Pro Game Hub
+          </h2>
+
+          <p>
+            Explore games, tools and premium
+            gaming experiences.
+          </p>
+
+          <div class="hero-actions">
+
+            <a
+              class="primary-btn"
+              href="https://kaviyarasan-1997.github.io/gamendbot/"
+              target="_blank"
+              rel="noopener"
+            >
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              Open
+            </a>
+
+            <button
+              class="ghost-btn react-action"
+              data-type="home"
+              data-id="gamend"
+              data-reaction="like"
+            >
+              <i class="fa-regular fa-heart"></i>
+              <b>0</b>
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- QUICK -->
+      <div class="quick-grid">
+
+        <button
+          class="quick-card"
+          data-nav="discover"
+        >
+          <i class="fa-solid fa-compass"></i>
+          <b>Discover</b>
+          <span>Social links</span>
+        </button>
+
+        <button
+          class="quick-card"
+          data-nav="websites"
+        >
+          <i class="fa-solid fa-globe"></i>
+          <b>Websites</b>
+          <span>10 demos</span>
+        </button>
+
+        <button
+          class="quick-card"
+          data-nav="apps"
+        >
+          <i class="fa-solid fa-mobile-screen-button"></i>
+          <b>Apps</b>
+          <span>Apps & tools</span>
+        </button>
+
+        <button
+          class="quick-card"
+          data-nav="projects"
+        >
+          <i class="fa-solid fa-code"></i>
+          <b>Projects</b>
+          <span>Tech works</span>
+        </button>
+
+      </div>
+
+
+      <!-- GITHUB -->
+      <div class="section-head compact">
+
+        <div>
+          <span class="eyebrow">GITHUB</span>
+          <h3>Latest Projects</h3>
+        </div>
+
+        <a
+          class="text-btn"
+          href="https://github.com/kaviyarasan-1997"
+          target="_blank"
+          rel="noopener"
+        >
+          View all
+        </a>
+
+      </div>
+
+      <div
+        id="githubHomeGrid"
+        class="card-grid"
+      ></div>
+
+    </section>
+
+
+    <!-- DISCOVER -->
+    <section
+      class="page"
+      data-page="discover"
+    >
+
+      <div class="section-head">
+
+        <div>
+          <span class="eyebrow">DISCOVER</span>
+          <h2>Social & Community</h2>
+        </div>
+
+      </div>
+
+      <div
+        id="discoverGrid"
+        class="card-grid"
+      ></div>
+
+    </section>
+
+
+    <!-- WEBSITES -->
+    <section
+      class="page"
+      data-page="websites"
+    >
+
+      <div class="section-head">
+
+        <div>
+          <span class="eyebrow">WEBSITES</span>
+          <h2>Explore Websites</h2>
+        </div>
+
+      </div>
+
+      <div
+        id="websitesGrid"
+        class="card-grid"
+      ></div>
+
+    </section>
+
+
+    <!-- APPS -->
+    <section
+      class="page"
+      data-page="apps"
+    >
+
+      <div class="section-head">
+
+        <div>
+          <span class="eyebrow">APPS</span>
+          <h2>Apps & Tools</h2>
+        </div>
+
+      </div>
+
+      <div
+        id="appsGrid"
+        class="card-grid"
+      ></div>
+
+    </section>
+
+
+    <!-- PROJECTS -->
+    <section
+      class="page"
+      data-page="projects"
+    >
+
+      <div class="section-head">
+
+        <div>
+          <span class="eyebrow">PROJECTS</span>
+          <h2>Tech Works</h2>
+        </div>
+
+      </div>
+
+      <div
+        id="projectsGrid"
+        class="card-grid"
+      ></div>
+
+    </section>
+
+
+    <div
+      id="noResults"
+      class="no-results hidden"
+    >
+
+      <i class="fa-solid fa-magnifying-glass"></i>
+
+      <h3>No results</h3>
+
+      <p>
+        Try another search keyword.
+      </p>
+
+    </div>
+
+  </main>
+
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+
+    <button
+      class="nav-item active"
+      data-nav="home"
+    >
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </button>
+
+    <button
+      class="nav-item"
+      data-nav="discover"
+    >
+      <i class="fa-solid fa-compass"></i>
+      <span>Discover</span>
+    </button>
+
+    <button
+      class="nav-item"
+      data-nav="websites"
+    >
+      <i class="fa-solid fa-globe"></i>
+      <span>Websites</span>
+    </button>
+
+    <button
+      class="nav-item"
+      data-nav="apps"
+    >
+      <i class="fa-solid fa-table-cells-large"></i>
+      <span>Apps</span>
+    </button>
+
+    <button
+      class="nav-item"
+      data-nav="projects"
+    >
+      <i class="fa-solid fa-code"></i>
+      <span>Projects</span>
+    </button>
+
+  </nav>
+
+</div>
+
+
+<!-- MODAL -->
+<div
+  class="modal-backdrop"
+  id="modalBackdrop"
+>
+
+  <div class="modal">
+
+    <button
+      class="modal-close"
+      id="modalClose"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div id="modalContent"></div>
+
+  </div>
+
+</div>
+
+
+<!-- TOAST -->
+<div
+  class="toast"
+  id="toast"
+></div>
+
+
+<script
+  type="module"
+  src="script.js"
+></script>
+
+</body>
+</html>
