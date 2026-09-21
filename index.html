@@ -2,9 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-  <meta name="theme-color" content="#090b0e">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+  >
+
+  <meta
+    name="theme-color"
+    content="#090b0e"
+  >
+
+  <meta
+    name="description"
+    content="InfoTalkies - Latest Tech News, AI Updates, Apps, Tips & Tricks – All in Tamil"
+  >
 
   <title>InfoTalkies</title>
 
@@ -26,29 +38,40 @@
 
 <body>
 
-<div id="app">
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
-  <!-- HEADER -->
-  <header class="top-header" id="topHeader">
+<header class="top-header">
 
-    <div class="title-row">
+  <div class="header-inner">
 
-      <div class="brand">
+    <div class="brand">
 
-        <div class="brand-icon">
-          <i class="fa-solid fa-bolt"></i>
-        </div>
-
-        <div>
-          <h1>InfoTalkies</h1>
-          <span>Tech • AI • Apps • Projects</span>
-        </div>
-
+      <div class="brand-logo">
+        <i class="fa-solid fa-bolt"></i>
       </div>
 
+      <div class="brand-text">
+        <strong>InfoTalkies</strong>
+        <span>Tech • AI • Apps • Tips</span>
+      </div>
+
+    </div>
+
+    <div class="header-actions">
+
       <button
-        class="icon-btn"
-        id="menuBtn"
+        class="icon-button"
+        id="themeToggle"
+        aria-label="Change theme"
+      >
+        <i class="fa-solid fa-sun"></i>
+      </button>
+
+      <button
+        class="icon-button"
+        id="menuButton"
         aria-label="More"
       >
         <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -56,370 +79,645 @@
 
     </div>
 
-    <div class="search-row">
+  </div>
 
-      <div class="search-box">
+  <!-- MORE MENU -->
 
-        <i class="fa-solid fa-magnifying-glass"></i>
+  <div class="more-menu" id="moreMenu">
 
-        <input
-          id="globalSearch"
-          type="search"
-          placeholder="Search apps, websites, projects..."
-        >
-
-        <button
-          id="clearSearch"
-          class="clear-search"
-        >
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-
-      </div>
-
-    </div>
-
-  </header>
-
-
-  <!-- MAIN -->
-  <main class="main-scroll" id="mainScroll">
-
-    <!-- HOME -->
-    <section
-      class="page active"
-      data-page="home"
-    >
-
-      <div class="section-head">
-
-        <div>
-          <span class="eyebrow">WELCOME</span>
-          <h2>Explore & Discover</h2>
-        </div>
-
-        <button
-          class="small-btn"
-          data-action="settings"
-        >
-          <i class="fa-solid fa-sliders"></i>
-        </button>
-
-      </div>
-
-
-      <!-- HERO -->
-      <article class="hero-card searchable-card">
-
-        <img
-          class="hero-image"
-          src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1400&q=85"
-          alt="Gaming"
-          loading="eager"
-        >
-
-        <div class="hero-overlay"></div>
-
-        <div class="hero-content">
-
-          <span class="badge">
-            <i class="fa-solid fa-fire"></i>
-            FEATURED
-          </span>
-
-          <h2>
-            Ultra Pro Game Hub
-          </h2>
-
-          <p>
-            Explore games, tools and premium
-            gaming experiences.
-          </p>
-
-          <div class="hero-actions">
-
-            <a
-              class="primary-btn"
-              href="https://kaviyarasan-1997.github.io/gamendbot/"
-              target="_blank"
-              rel="noopener"
-            >
-              <i class="fa-solid fa-arrow-up-right-from-square"></i>
-              Open
-            </a>
-
-            <button
-              class="ghost-btn react-action"
-              data-type="home"
-              data-id="gamend"
-              data-reaction="like"
-            >
-              <i class="fa-regular fa-heart"></i>
-              <b>0</b>
-            </button>
-
-          </div>
-
-        </div>
-
-      </article>
-
-
-      <!-- QUICK -->
-      <div class="quick-grid">
-
-        <button
-          class="quick-card"
-          data-nav="discover"
-        >
-          <i class="fa-solid fa-compass"></i>
-          <b>Discover</b>
-          <span>Social links</span>
-        </button>
-
-        <button
-          class="quick-card"
-          data-nav="websites"
-        >
-          <i class="fa-solid fa-globe"></i>
-          <b>Websites</b>
-          <span>10 demos</span>
-        </button>
-
-        <button
-          class="quick-card"
-          data-nav="apps"
-        >
-          <i class="fa-solid fa-mobile-screen-button"></i>
-          <b>Apps</b>
-          <span>Apps & tools</span>
-        </button>
-
-        <button
-          class="quick-card"
-          data-nav="projects"
-        >
-          <i class="fa-solid fa-code"></i>
-          <b>Projects</b>
-          <span>Tech works</span>
-        </button>
-
-      </div>
-
-
-      <!-- GITHUB -->
-      <div class="section-head compact">
-
-        <div>
-          <span class="eyebrow">GITHUB</span>
-          <h3>Latest Projects</h3>
-        </div>
-
-        <a
-          class="text-btn"
-          href="https://github.com/kaviyarasan-1997"
-          target="_blank"
-          rel="noopener"
-        >
-          View all
-        </a>
-
-      </div>
-
-      <div
-        id="githubHomeGrid"
-        class="card-grid"
-      ></div>
-
-    </section>
-
-
-    <!-- DISCOVER -->
-    <section
-      class="page"
-      data-page="discover"
-    >
-
-      <div class="section-head">
-
-        <div>
-          <span class="eyebrow">DISCOVER</span>
-          <h2>Social & Community</h2>
-        </div>
-
-      </div>
-
-      <div
-        id="discoverGrid"
-        class="card-grid"
-      ></div>
-
-    </section>
-
-
-    <!-- WEBSITES -->
-    <section
-      class="page"
-      data-page="websites"
-    >
-
-      <div class="section-head">
-
-        <div>
-          <span class="eyebrow">WEBSITES</span>
-          <h2>Explore Websites</h2>
-        </div>
-
-      </div>
-
-      <div
-        id="websitesGrid"
-        class="card-grid"
-      ></div>
-
-    </section>
-
-
-    <!-- APPS -->
-    <section
-      class="page"
-      data-page="apps"
-    >
-
-      <div class="section-head">
-
-        <div>
-          <span class="eyebrow">APPS</span>
-          <h2>Apps & Tools</h2>
-        </div>
-
-      </div>
-
-      <div
-        id="appsGrid"
-        class="card-grid"
-      ></div>
-
-    </section>
-
-
-    <!-- PROJECTS -->
-    <section
-      class="page"
-      data-page="projects"
-    >
-
-      <div class="section-head">
-
-        <div>
-          <span class="eyebrow">PROJECTS</span>
-          <h2>Tech Works</h2>
-        </div>
-
-      </div>
-
-      <div
-        id="projectsGrid"
-        class="card-grid"
-      ></div>
-
-    </section>
-
-
-    <div
-      id="noResults"
-      class="no-results hidden"
-    >
-
-      <i class="fa-solid fa-magnifying-glass"></i>
-
-      <h3>No results</h3>
-
-      <p>
-        Try another search keyword.
-      </p>
-
-    </div>
-
-  </main>
-
-
-  <!-- BOTTOM NAV -->
-  <nav class="bottom-nav">
-
-    <button
-      class="nav-item active"
-      data-nav="home"
-    >
-      <i class="fa-solid fa-house"></i>
-      <span>Home</span>
+    <button id="shareApp">
+      <i class="fa-solid fa-share-nodes"></i>
+      Share InfoTalkies
     </button>
 
-    <button
-      class="nav-item"
-      data-nav="discover"
-    >
-      <i class="fa-solid fa-compass"></i>
-      <span>Discover</span>
+    <button id="feedbackButton">
+      <i class="fa-regular fa-message"></i>
+      Feedback
     </button>
 
-    <button
-      class="nav-item"
-      data-nav="websites"
-    >
-      <i class="fa-solid fa-globe"></i>
-      <span>Websites</span>
+    <button id="reportButton">
+      <i class="fa-solid fa-flag"></i>
+      Report
     </button>
 
-    <button
-      class="nav-item"
-      data-nav="apps"
+    <a
+      href="https://github.com/kaviyarasan-1997"
+      target="_blank"
+      rel="noopener noreferrer"
     >
-      <i class="fa-solid fa-table-cells-large"></i>
-      <span>Apps</span>
-    </button>
+      <i class="fa-brands fa-github"></i>
+      GitHub
+    </a>
 
-    <button
-      class="nav-item"
-      data-nav="projects"
+  </div>
+
+</header>
+
+
+<!-- =====================================================
+     SEARCH
+===================================================== -->
+
+<div class="search-area">
+
+  <div class="search-box">
+
+    <i class="fa-solid fa-magnifying-glass"></i>
+
+    <input
+      id="globalSearch"
+      type="search"
+      placeholder="Search apps, websites, projects..."
+      autocomplete="off"
     >
-      <i class="fa-solid fa-code"></i>
-      <span>Projects</span>
-    </button>
 
-  </nav>
-
-</div>
-
-
-<!-- MODAL -->
-<div
-  class="modal-backdrop"
-  id="modalBackdrop"
->
-
-  <div class="modal">
-
-    <button
-      class="modal-close"
-      id="modalClose"
-    >
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-
-    <div id="modalContent"></div>
+    <span class="search-key">/</span>
 
   </div>
 
 </div>
 
 
-<!-- TOAST -->
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main-content">
+
+
+<!-- =====================================================
+     HOME
+===================================================== -->
+
+<section
+  class="page-section active"
+  id="homeSection"
+>
+
+  <div class="hero">
+
+    <div class="hero-glow"></div>
+
+    <div class="hero-content">
+
+      <span class="hero-label">
+        <i class="fa-solid fa-circle"></i>
+        INFO TALKIES
+      </span>
+
+      <h1>
+        Technology.
+        <br>
+        <span>Explained in Tamil.</span>
+      </h1>
+
+      <p>
+        Latest Tech News, AI Updates, Apps,
+        Tips & Tricks – All in Tamil.
+      </p>
+
+      <div class="hero-buttons">
+
+        <button
+          class="hero-btn primary"
+          id="youtubeButton"
+        >
+          <i class="fa-brands fa-youtube"></i>
+          Subscribe
+        </button>
+
+        <button
+          class="hero-btn secondary"
+          id="instagramButton"
+        >
+          <i class="fa-brands fa-instagram"></i>
+          Instagram
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="hero-art">
+
+      <div class="orb orb-one"></div>
+      <div class="orb orb-two"></div>
+
+      <div class="hero-tech-icon">
+        <i class="fa-solid fa-microchip"></i>
+      </div>
+
+      <div class="floating-icon one">
+        <i class="fa-solid fa-robot"></i>
+      </div>
+
+      <div class="floating-icon two">
+        <i class="fa-solid fa-mobile-screen-button"></i>
+      </div>
+
+      <div class="floating-icon three">
+        <i class="fa-solid fa-code"></i>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- QUICK ACCESS -->
+
+  <div class="section-heading">
+
+    <div>
+      <span class="eyebrow">EXPLORE</span>
+      <h2>Quick Access</h2>
+    </div>
+
+  </div>
+
+
+  <div class="quick-grid">
+
+    <button
+      class="quick-card"
+      data-section="discover"
+    >
+      <span class="quick-icon">
+        <i class="fa-solid fa-compass"></i>
+      </span>
+
+      <span>
+        <b>Discover</b>
+        <small>Explore content</small>
+      </span>
+    </button>
+
+
+    <button
+      class="quick-card"
+      data-section="websites"
+    >
+      <span class="quick-icon">
+        <i class="fa-solid fa-globe"></i>
+      </span>
+
+      <span>
+        <b>Websites</b>
+        <small>Live projects</small>
+      </span>
+    </button>
+
+
+    <button
+      class="quick-card"
+      data-section="apps"
+    >
+      <span class="quick-icon">
+        <i class="fa-solid fa-mobile-screen-button"></i>
+      </span>
+
+      <span>
+        <b>Apps</b>
+        <small>Android apps</small>
+      </span>
+    </button>
+
+
+    <button
+      class="quick-card"
+      data-section="projects"
+    >
+      <span class="quick-icon">
+        <i class="fa-solid fa-code"></i>
+      </span>
+
+      <span>
+        <b>Projects</b>
+        <small>Developer lab</small>
+      </span>
+    </button>
+
+  </div>
+
+
+  <!-- SOCIAL -->
+
+  <div class="social-card">
+
+    <div class="social-left">
+
+      <div class="social-avatar">
+        <i class="fa-solid fa-bolt"></i>
+      </div>
+
+      <div>
+        <strong>Follow InfoTalkies</strong>
+        <span>Stay updated with new tech content</span>
+      </div>
+
+    </div>
+
+    <button
+      id="facebookButton"
+      class="social-facebook"
+    >
+      <i class="fa-brands fa-facebook-f"></i>
+    </button>
+
+  </div>
+
+
+  <!-- GITHUB -->
+
+  <div class="section-heading github-heading">
+
+    <div>
+      <span class="eyebrow">DEVELOPER</span>
+      <h2>Latest GitHub</h2>
+    </div>
+
+    <a
+      href="https://github.com/kaviyarasan-1997"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="heading-link"
+    >
+      View all
+      <i class="fa-solid fa-arrow-right"></i>
+    </a>
+
+  </div>
+
+  <div
+    class="github-grid"
+    id="githubLatest"
+  ></div>
+
+</section>
+
+
+<!-- =====================================================
+     DISCOVER
+===================================================== -->
+
+<section
+  class="page-section"
+  id="discoverSection"
+>
+
+  <div class="page-title">
+
+    <span class="eyebrow">DISCOVER</span>
+
+    <h1>Latest Updates</h1>
+
+    <p>
+      Interesting technology, AI, apps and
+      developer content.
+    </p>
+
+  </div>
+
+
+  <div class="discover-banner">
+
+    <div>
+
+      <span>
+        <i class="fa-solid fa-sparkles"></i>
+        INFO TALKIES
+      </span>
+
+      <h2>
+        Learn something
+        <br>
+        new every day.
+      </h2>
+
+    </div>
+
+    <i class="fa-solid fa-brain banner-icon"></i>
+
+  </div>
+
+
+  <div class="discover-grid">
+
+    <article
+      class="discover-card searchable-card"
+      data-search="AI artificial intelligence technology"
+    >
+
+      <div class="discover-image">
+        <img
+          src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=900&q=82"
+          alt="AI"
+        >
+      </div>
+
+      <div class="discover-body">
+
+        <span class="tag">
+          AI
+        </span>
+
+        <h3>
+          Artificial Intelligence
+        </h3>
+
+        <p>
+          AI updates, tools and interesting
+          technology explained simply.
+        </p>
+
+      </div>
+
+    </article>
+
+
+    <article
+      class="discover-card searchable-card"
+      data-search="mobile apps smartphone"
+    >
+
+      <div class="discover-image">
+        <img
+          src="https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=900&q=82"
+          alt="Mobile Apps"
+        >
+      </div>
+
+      <div class="discover-body">
+
+        <span class="tag">
+          APPS
+        </span>
+
+        <h3>
+          Useful Apps
+        </h3>
+
+        <p>
+          Discover useful apps and tools
+          for everyday life.
+        </p>
+
+      </div>
+
+    </article>
+
+
+    <article
+      class="discover-card searchable-card"
+      data-search="coding developer web"
+    >
+
+      <div class="discover-image">
+        <img
+          src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=900&q=82"
+          alt="Coding"
+        >
+      </div>
+
+      <div class="discover-body">
+
+        <span class="tag">
+          DEV
+        </span>
+
+        <h3>
+          Developer World
+        </h3>
+
+        <p>
+          Coding, web development and
+          software projects.
+        </p>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     WEBSITES
+===================================================== -->
+
+<section
+  class="page-section"
+  id="websitesSection"
+>
+
+  <div class="page-title">
+
+    <span class="eyebrow">ONLINE</span>
+
+    <h1>Websites</h1>
+
+    <p>
+      Explore web applications and live projects.
+    </p>
+
+  </div>
+
+
+  <div
+    class="cards-grid"
+    id="websitesGrid"
+  ></div>
+
+</section>
+
+
+<!-- =====================================================
+     APPS
+===================================================== -->
+
+<section
+  class="page-section"
+  id="appsSection"
+>
+
+  <div class="page-title">
+
+    <span class="eyebrow">DOWNLOAD</span>
+
+    <h1>Apps</h1>
+
+    <p>
+      Android applications and useful mobile tools.
+    </p>
+
+  </div>
+
+
+  <div
+    class="cards-grid"
+    id="appsGrid"
+  ></div>
+
+</section>
+
+
+<!-- =====================================================
+     PROJECTS
+===================================================== -->
+
+<section
+  class="page-section"
+  id="projectsSection"
+>
+
+  <div class="page-title">
+
+    <span class="eyebrow">BUILD</span>
+
+    <h1>Projects</h1>
+
+    <p>
+      Development experiments, GitHub projects
+      and creative builds.
+    </p>
+
+  </div>
+
+
+  <div
+    class="cards-grid"
+    id="projectsGrid"
+  ></div>
+
+</section>
+
+</main>
+
+
+<!-- =====================================================
+     BOTTOM NAVIGATION
+===================================================== -->
+
+<nav class="bottom-nav">
+
+  <button
+    class="active"
+    data-section="home"
+  >
+    <i class="fa-solid fa-house"></i>
+    <span>Home</span>
+  </button>
+
+
+  <button
+    data-section="discover"
+  >
+    <i class="fa-solid fa-compass"></i>
+    <span>Discover</span>
+  </button>
+
+
+  <button
+    data-section="websites"
+  >
+    <i class="fa-solid fa-globe"></i>
+    <span>Websites</span>
+  </button>
+
+
+  <button
+    data-section="apps"
+  >
+    <i class="fa-solid fa-mobile-screen-button"></i>
+    <span>Apps</span>
+  </button>
+
+
+  <button
+    data-section="projects"
+  >
+    <i class="fa-solid fa-code"></i>
+    <span>Projects</span>
+  </button>
+
+</nav>
+
+
+<!-- =====================================================
+     COMMENT MODAL
+===================================================== -->
+
 <div
-  class="toast"
-  id="toast"
+  class="modal"
+  id="commentModal"
+>
+
+  <div class="modal-box">
+
+    <div class="modal-header">
+
+      <div>
+        <span class="eyebrow">COMMUNITY</span>
+        <h2 id="commentModalTitle">
+          Comments
+        </h2>
+      </div>
+
+      <button
+        class="modal-close"
+        id="commentClose"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+    </div>
+
+
+    <div
+      class="comments-list"
+      id="commentsList"
+    ></div>
+
+
+    <div class="comment-input-area">
+
+      <textarea
+        id="commentInput"
+        rows="3"
+        maxlength="500"
+        placeholder="Write your comment..."
+      ></textarea>
+
+      <button
+        class="comment-submit"
+        id="commentSubmit"
+      >
+        <i class="fa-solid fa-paper-plane"></i>
+        Post Comment
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     TOAST
+===================================================== -->
+
+<div
+  class="info-toast"
+  id="infoToast"
 ></div>
 
+
+<!-- =====================================================
+     JS
+===================================================== -->
 
 <script
   type="module"

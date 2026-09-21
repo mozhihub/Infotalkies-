@@ -1,105 +1,80 @@
-import {
-  initializeApp
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+/* =========================================================
+   InfoTalkies V3 - app.js
+   ========================================================= */
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import {
   getDatabase,
   ref,
-  get,
+  onValue,
+  set,
+  push,
   update,
-  push
+  remove
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
 
-
-/* =========================================
+/* =========================================================
    FIREBASE
-========================================= */
+   ========================================================= */
 
 const FIREBASE_CONFIG = {
-
-  apiKey:
-    "AIzaSyCaALqxdtEPCNxg5XPPG81T9853gOPO4qY",
-
-  authDomain:
-    "server-41203.firebaseapp.com",
-
-  databaseURL:
-    "https://server-41203-default-rtdb.firebaseio.com",
-
-  projectId:
-    "server-41203",
-
-  storageBucket:
-    "server-41203.firebasestorage.app",
-
-  messagingSenderId:
-    "26278139327",
-
-  appId:
-    "1:26278139327:web:db44a7e2d8d42d690abd0a"
+  apiKey: "AIzaSyCaALqxdtEPCNxg5XPPG81T9853gOPO4qY",
+  authDomain: "server-41203.firebaseapp.com",
+  databaseURL: "https://server-41203-default-rtdb.firebaseio.com",
+  projectId: "server-41203",
+  storageBucket: "server-41203.firebasestorage.app",
+  messagingSenderId: "26278139327",
+  appId: "1:26278139327:web:db44a7e2d8d42d690abd0a"
 };
 
+const firebaseApp = initializeApp(FIREBASE_CONFIG);
+const db = getDatabase(firebaseApp);
 
-const firebaseApp =
-  initializeApp(FIREBASE_CONFIG);
+/* =========================================================
+   HELPERS
+   ========================================================= */
 
-const db =
-  getDatabase(firebaseApp);
+const $ = selector => document.querySelector(selector);
+const $$ = selector => document.querySelectorAll(selector);
 
+const safeId = value =>
+  String(value || "")
+    .replace(/[.#$[\]/]/g, "_")
+    .replace(/\s+/g, "-")
+    .toLowerCase();
 
-/* =========================================
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function escapeAttr(value) {
+  return escapeHTML(value);
+}
+
+/* =========================================================
    LINKS
-========================================= */
+   ========================================================= */
 
 const LINKS = {
-
-  youtube:
-    "https://www.youtube.com/@infotalkies",
-
-  instagram:
-    "https://www.instagram.com/infotalkies",
-
-  facebook:
-    "https://www.facebook.com/infotalkies",
-
-  github:
-    "https://github.com/kaviyarasan-1997",
-
-  portfolio:
-    "https://kaviyarasan-1997.github.io/Portfolio",
-
-  gamend:
-    "https://kaviyarasan-1997.github.io/gamendbot/",
-
-  dyfi:
-    "https://dyfitamilnadu.org"
-
+  youtube: "https://www.youtube.com/@infotalkies",
+  instagram: "https://www.instagram.com/infotalkies",
+  facebook: "https://www.facebook.com/infotalkies",
+  github: "https://github.com/kaviyarasan-1997",
+  portfolio: "https://kaviyarasan-1997.github.io/Portfolio",
+  gamend: "https://kaviyarasan-1997.github.io/gamendbot/",
+  dyfi: "https://dyfitamilnadu.org"
 };
 
-
-/* =========================================
-   USER ID
-========================================= */
-
-const userId =
-  localStorage.getItem("info_user") ||
-  "user_" +
-  Math.random()
-    .toString(36)
-    .slice(2,10);
-
-localStorage.setItem(
-  "info_user",
-  userId
-);
-
-
-/* =========================================
+/* =========================================================
    ONLINE IMAGE LIBRARY
-========================================= */
+   ========================================================= */
 
 const IMAGES = {
-
   gaming:
     "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=82",
 
@@ -147,2692 +122,1788 @@ const IMAGES = {
 
   web:
     "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=900&q=82"
-
 };
 
+/* =========================================================
+   APP DATA
+   ========================================================= */
 
-/* =========================================
-   HELPERS
-========================================= */
+const appData = [
+  {
+    id: "gamend-apk",
+    title: "GAMEND",
+    description:
+      "Ultra Pro Game Hub Android application. Download the latest APK.",
+    icon: "fa-solid fa-gamepad",
+    image: IMAGES.gaming,
+    url:
+      "https://github.com/mozhihub/Infotalkies-/raw/refs/heads/main/apps/GAMEND.apk",
+    download: true
+  },
 
-const $ =
-  selector =>
-    document.querySelector(selector);
+  {
+    id: "rhythm-music-apk",
+    title: "Rhythm Music",
+    description:
+      "Rhythm Music Android application. Download the APK and enjoy music.",
+    icon: "fa-solid fa-music",
+    image: IMAGES.music,
+    url:
+      "https://github.com/mozhihub/Infotalkies-/raw/refs/heads/main/apps/Rhythm%20music%20(1).apk",
+    download: true
+  },
 
+  {
+    id: "info-app",
+    title: "InfoTalkies",
+    description:
+      "Technology media application with useful tech updates and information.",
+    icon: "fa-solid fa-bolt",
+    image: IMAGES.tech,
+    url: LINKS.youtube
+  },
 
-const $$ =
-  selector =>
-    [...document.querySelectorAll(selector)];
+  {
+    id: "note",
+    title: "Note Studio",
+    description: "Advanced notes application.",
+    icon: "fa-solid fa-note-sticky",
+    image: IMAGES.notes,
+    url: LINKS.portfolio
+  },
 
+  {
+    id: "fitness",
+    title: "Fitness Pro",
+    description: "Workout planner application.",
+    icon: "fa-solid fa-dumbbell",
+    image: IMAGES.fitness,
+    url: LINKS.portfolio
+  },
 
-function escapeHTML(value){
+  {
+    id: "ai-chat",
+    title: "AI Chat Hub",
+    description: "AI assistant application concept.",
+    icon: "fa-solid fa-robot",
+    image: IMAGES.ai,
+    url: LINKS.portfolio
+  },
 
-  return String(value)
-    .replace(
-      /[&<>"']/g,
-      char => ({
-        "&":"&amp;",
-        "<":"&lt;",
-        ">":"&gt;",
-        '"':"&quot;",
-        "'":"&#039;"
-      }[char])
-    );
+  {
+    id: "game-center",
+    title: "Game Center",
+    description: "Game collection interface.",
+    icon: "fa-solid fa-dice",
+    image: IMAGES.gaming2,
+    url: LINKS.gamend
+  },
 
-}
+  {
+    id: "project-manager",
+    title: "Project Manager",
+    description: "Developer utility application.",
+    icon: "fa-solid fa-code",
+    image: IMAGES.coding,
+    url: LINKS.portfolio
+  },
 
+  {
+    id: "media-toolkit",
+    title: "Media Toolkit",
+    description: "Creator utility tools.",
+    icon: "fa-solid fa-wand-magic-sparkles",
+    image: IMAGES.social,
+    url: LINKS.portfolio
+  }
+];
 
-function showToast(message){
+/* =========================================================
+   WEBSITE DATA
+   ========================================================= */
 
-  const toast =
-    $("#toast");
+const websiteData = [
+  {
+    id: "downloader",
+    title: "Downloader",
+    description: "Online downloader web application.",
+    image: IMAGES.web,
+    demo: "https://mozhihub.github.io/Downloader/"
+  },
 
-  toast.textContent =
-    message;
+  {
+    id: "music-website",
+    title: "Music Website",
+    description: "Online Tamil music player and music website.",
+    image: IMAGES.music,
+    demo: "https://mozhihub.github.io/MUSIC/"
+  },
 
-  toast.classList.add(
-    "show"
-  );
+  {
+    id: "signature",
+    title: "Signature Database",
+    description: "Signature database web application.",
+    image: IMAGES.database,
+    demo: "https://mozhihub.github.io/signature/"
+  },
 
-  clearTimeout(
-    window.toastTimer
-  );
+  {
+    id: "voting",
+    title: "Voting",
+    description: "Online voting web application.",
+    image: IMAGES.team,
+    demo: "https://kaviyarasan-1997.github.io/Vote/"
+  },
 
-  window.toastTimer =
-    setTimeout(
-      () => {
-        toast.classList.remove(
-          "show"
-        );
-      },
-      2200
-    );
+  {
+    id: "dyfi",
+    title: "DYFI Tamil Nadu",
+    description: "Official web platform.",
+    image: IMAGES.team,
+    demo: LINKS.dyfi
+  },
 
-}
+  {
+    id: "gamehub",
+    title: "Ultra Pro Game Hub",
+    description: "Gaming web application.",
+    image: IMAGES.gaming,
+    demo: LINKS.gamend
+  },
 
+  {
+    id: "portfolio",
+    title: "Kaviyarasan Portfolio",
+    description: "Developer portfolio.",
+    image: IMAGES.laptop,
+    demo: LINKS.portfolio
+  },
 
-/* =========================================
-   IMAGE
-========================================= */
+  {
+    id: "infotalkies",
+    title: "InfoTalkies",
+    description: "Technology media platform.",
+    image: IMAGES.tech,
+    demo: LINKS.youtube
+  },
 
-function cardImage(
-  image,
-  title
-){
+  {
+    id: "web-demo-9",
+    title: "Mobile UI Demo",
+    description: "Mobile-first interface.",
+    image: IMAGES.mobile,
+    demo: LINKS.portfolio
+  },
 
+  {
+    id: "web-demo-10",
+    title: "AI Web Project",
+    description: "Experimental AI web project.",
+    image: IMAGES.ai,
+    demo: LINKS.portfolio
+  }
+];
+
+/* =========================================================
+   PROJECT DATA
+   ========================================================= */
+
+const projectData = [
+  {
+    id: "mention-robot",
+    title: "Mention Robot",
+    description: "GitHub project for Mention Robot.",
+    icon: "fa-brands fa-github",
+    image: IMAGES.ai,
+    url: "https://github.com/mozhihub/Mention-Robot"
+  },
+
+  {
+    id: "arduino",
+    title: "Arduino Projects",
+    description: "Boards, sensors and electronics experiments.",
+    icon: "fa-solid fa-microchip",
+    image: IMAGES.tech,
+    url: LINKS.github
+  },
+
+  {
+    id: "automation",
+    title: "Automation",
+    description: "Automation and hardware projects.",
+    icon: "fa-solid fa-gears",
+    image: IMAGES.android,
+    url: LINKS.github
+  },
+
+  {
+    id: "fullstack",
+    title: "Full Stack Projects",
+    description: "HTML, CSS, JavaScript and Firebase.",
+    icon: "fa-solid fa-code",
+    image: IMAGES.coding,
+    url: LINKS.github
+  },
+
+  {
+    id: "ai",
+    title: "AI Experiments",
+    description: "AI powered application concepts.",
+    icon: "fa-solid fa-brain",
+    image: IMAGES.ai,
+    url: LINKS.github
+  },
+
+  {
+    id: "ui",
+    title: "Web UI Lab",
+    description: "Responsive interface experiments.",
+    icon: "fa-solid fa-palette",
+    image: IMAGES.web,
+    url: LINKS.github
+  },
+
+  {
+    id: "android",
+    title: "Android WebView",
+    description: "Web-to-app Android projects.",
+    icon: "fa-brands fa-android",
+    image: IMAGES.android,
+    url: LINKS.github
+  },
+
+  {
+    id: "firebase",
+    title: "Firebase Apps",
+    description: "Realtime Firebase projects.",
+    icon: "fa-solid fa-database",
+    image: IMAGES.database,
+    url: LINKS.github
+  },
+
+  {
+    id: "game-ui",
+    title: "Game UI Lab",
+    description: "Interactive game interfaces.",
+    icon: "fa-solid fa-gamepad",
+    image: IMAGES.gaming2,
+    url: LINKS.github
+  },
+
+  {
+    id: "media",
+    title: "Media Tools",
+    description: "Creator utility projects.",
+    icon: "fa-solid fa-photo-film",
+    image: IMAGES.social,
+    url: LINKS.github
+  }
+];
+
+/* =========================================================
+   CURRENT USER
+   ========================================================= */
+
+const userId =
+  localStorage.getItem("info_user_id") ||
+  "user_" +
+    Math.random()
+      .toString(36)
+      .substring(2, 12);
+
+localStorage.setItem("info_user_id", userId);
+
+/* =========================================================
+   IMAGE CARD
+   ========================================================= */
+
+function cardImage(image, title) {
   const fallback =
     "https://picsum.photos/seed/" +
     encodeURIComponent(title) +
     "/900/520";
 
   return `
-
     <div class="card-cover">
-
       <img
-        src="${image}"
-        alt="${escapeHTML(title)}"
+        src="${escapeAttr(image)}"
+        alt="${escapeAttr(title)}"
         loading="lazy"
-        onerror="
-          this.onerror=null;
-          this.src='${fallback}';
-        "
+        onerror="this.onerror=null;this.src='${fallback}'"
       >
 
-      <div class="cover-gradient"></div>
-
-      <span class="cover-badge">
+      <span class="image-badge">
+        <i class="fa-solid fa-globe"></i>
         ONLINE LIBRARY
       </span>
-
     </div>
-
   `;
-
 }
 
-
-/* =========================================
-   DISCOVER DATA
-========================================= */
-
-const discoverData = [
-
-  {
-    id:"youtube",
-    title:"InfoTalkies YouTube",
-    subtitle:"Tech Updates",
-    description:
-      "Latest tech news, AI updates, apps, tips & tricks in Tamil.",
-    icon:"fa-brands fa-youtube",
-    image:IMAGES.social,
-    url:LINKS.youtube
-  },
-
-  {
-    id:"instagram",
-    title:"InfoTalkies Instagram",
-    subtitle:"Tech Reels",
-    description:
-      "Technology posters, reels and interesting updates.",
-    icon:"fa-brands fa-instagram",
-    image:IMAGES.instagram,
-    url:LINKS.instagram
-  },
-
-  {
-    id:"facebook",
-    title:"InfoTalkies Facebook",
-    subtitle:"Community",
-    description:
-      "Follow the latest InfoTalkies updates.",
-    icon:"fa-brands fa-facebook",
-    image:IMAGES.team,
-    url:LINKS.facebook
-  },
-
-  {
-    id:"github",
-    title:"Kaviyarasan GitHub",
-    subtitle:"Open Source",
-    description:
-      "Explore web apps, Android projects and experiments.",
-    icon:"fa-brands fa-github",
-    image:IMAGES.coding,
-    url:LINKS.github
-  },
-
-  {
-    id:"youtube-shorts",
-    title:"InfoTalkies Shorts",
-    subtitle:"Quick Videos",
-    description:
-      "Short and interesting technology explainers.",
-    icon:"fa-brands fa-youtube",
-    image:IMAGES.mobile,
-    url:LINKS.youtube
-  },
-
-  {
-    id:"creator",
-    title:"Creator Feed",
-    subtitle:"Visual Content",
-    description:
-      "Creative technology content and updates.",
-    icon:"fa-solid fa-photo-film",
-    image:IMAGES.social,
-    url:LINKS.instagram
-  }
-
-];
-
-
-/* =========================================
-   WEBSITE DATA
-========================================= */
-
-const websiteData = [
-
-  {
-    id:"dyfi",
-    title:"DYFI Tamil Nadu",
-    description:
-      "Official web platform.",
-    image:IMAGES.team,
-    demo:LINKS.dyfi
-  },
-
-  {
-    id:"gamehub",
-    title:"Ultra Pro Game Hub",
-    description:
-      "Gaming web application.",
-    image:IMAGES.gaming,
-    demo:LINKS.gamend
-  },
-
-  {
-    id:"portfolio",
-    title:"Kaviyarasan Portfolio",
-    description:
-      "Developer portfolio.",
-    image:IMAGES.laptop,
-    demo:LINKS.portfolio
-  },
-
-  {
-    id:"infotalkies",
-    title:"InfoTalkies",
-    description:
-      "Technology media platform.",
-    image:IMAGES.tech,
-    demo:LINKS.youtube
-  },
-
-  {
-    id:"web-demo-5",
-    title:"Modern Web Demo",
-    description:
-      "Responsive modern web interface.",
-    image:IMAGES.web,
-    demo:LINKS.portfolio
-  },
-
-  {
-    id:"web-demo-6",
-    title:"Creative UI Demo",
-    description:
-      "Creative website interface.",
-    image:IMAGES.coding,
-    demo:LINKS.portfolio
-  },
-
-  {
-    id:"web-demo-7",
-    title:"Mobile UI Demo",
-    description:
-      "Mobile-first interface.",
-    image:IMAGES.mobile,
-    demo:LINKS.portfolio
-  },
-
-  {
-    id:"web-demo-8",
-    title:"JavaScript Lab",
-    description:
-      "JavaScript experiment.",
-    image:IMAGES.coding,
-    demo:LINKS.portfolio
-  },
-
-  {
-    id:"web-demo-9",
-    title:"App Store UI",
-    description:
-      "App-store style web interface.",
-    image:IMAGES.mobile,
-    demo:LINKS.portfolio
-  },
-
-  {
-    id:"web-demo-10",
-    title:"Experimental Project",
-    description:
-      "Experimental web project.",
-    image:IMAGES.ai,
-    demo:LINKS.portfolio
-  }
-
-];
-
-
-/* =========================================
-   APP DATA
-========================================= */
-
-const appData = [
-
-  {
-    id:"gamehub",
-    title:"Ultra Pro Game Hub",
-    description:
-      "Gaming hub and game collection.",
-    icon:"fa-solid fa-gamepad",
-    image:IMAGES.gaming,
-    url:LINKS.GAMEND
-  },
-
-  {
-    id:"dyfi-app",
-    title:"DYFI Tamil Nadu",
-    description:
-      "Organisation web application.",
-    icon:"fa-solid fa-users",
-    image:IMAGES.team,
-    url:LINKS.dyfi
-  },
-
-  {
-    id:"rhythm",
-    title:"Rhythm Music",
-    description:
-      "Modern music player concept.",
-    icon:"fa-solid fa-music",
-    image:IMAGES.music,
-    url:LINKS.portfolio
-  },
-
-  {
-    id:"info-app",
-    title:"InfoTalkies",
-    description:
-      "Technology media application.",
-    icon:"fa-solid fa-bolt",
-    image:IMAGES.tech,
-    url:LINKS.youtube
-  },
-
-  {
-    id:"note",
-    title:"Note Studio",
-    description:
-      "Advanced notes application.",
-    icon:"fa-solid fa-note-sticky",
-    image:IMAGES.notes,
-    url:LINKS.portfolio
-  },
-
-  {
-    id:"fitness",
-    title:"Fitness Pro",
-    description:
-      "Workout planner application.",
-    icon:"fa-solid fa-dumbbell",
-    image:IMAGES.fitness,
-    url:LINKS.portfolio
-  },
-
-  {
-    id:"ai-chat",
-    title:"AI Chat Hub",
-    description:
-      "AI assistant application concept.",
-    icon:"fa-solid fa-robot",
-    image:IMAGES.ai,
-    url:LINKS.portfolio
-  },
-
-  {
-    id:"game-center",
-    title:"Game Center",
-    description:
-      "Game collection interface.",
-    icon:"fa-solid fa-dice",
-    image:IMAGES.gaming2,
-    url:LINKS.gamend
-  },
-
-  {
-    id:"project-manager",
-    title:"Project Manager",
-    description:
-      "Developer utility application.",
-    icon:"fa-solid fa-code",
-    image:IMAGES.coding,
-    url:LINKS.portfolio
-  },
-
-  {
-    id:"media-toolkit",
-    title:"Media Toolkit",
-    description:
-      "Creator utility tools.",
-    icon:"fa-solid fa-wand-magic-sparkles",
-    image:IMAGES.social,
-    url:LINKS.portfolio
-  }
-
-];
-
-
-/* =========================================
-   PROJECT DATA
-========================================= */
-
-const projectData = [
-
-  {
-    id:"arduino",
-    title:"Arduino Projects",
-    description:
-      "Boards, sensors and electronics experiments.",
-    icon:"fa-solid fa-microchip",
-    image:IMAGES.tech
-  },
-
-  {
-    id:"automation",
-    title:"Automation",
-    description:
-      "Automation and hardware projects.",
-    icon:"fa-solid fa-gears",
-    image:IMAGES.android
-  },
-
-  {
-    id:"fullstack",
-    title:"Full Stack Projects",
-    description:
-      "HTML, CSS, JavaScript and Firebase.",
-    icon:"fa-solid fa-code",
-    image:IMAGES.coding
-  },
-
-  {
-    id:"ai",
-    title:"AI Experiments",
-    description:
-      "AI powered application concepts.",
-    icon:"fa-solid fa-brain",
-    image:IMAGES.ai
-  },
-
-  {
-    id:"ui",
-    title:"Web UI Lab",
-    description:
-      "Responsive interface experiments.",
-    icon:"fa-solid fa-palette",
-    image:IMAGES.web
-  },
-
-  {
-    id:"android",
-    title:"Android WebView",
-    description:
-      "Web-to-app Android projects.",
-    icon:"fa-brands fa-android",
-    image:IMAGES.android
-  },
-
-  {
-    id:"firebase",
-    title:"Firebase Apps",
-    description:
-      "Realtime Firebase projects.",
-    icon:"fa-solid fa-database",
-    image:IMAGES.database
-  },
-
-  {
-    id:"game-ui",
-    title:"Game UI Lab",
-    description:
-      "Interactive game interfaces.",
-    icon:"fa-solid fa-gamepad",
-    image:IMAGES.gaming2
-  },
-
-  {
-    id:"media",
-    title:"Media Tools",
-    description:
-      "Creator utility projects.",
-    icon:"fa-solid fa-photo-film",
-    image:IMAGES.social
-  },
-
-  {
-    id:"opensource",
-    title:"Open Source",
-    description:
-      "Reusable GitHub projects.",
-    icon:"fa-brands fa-github",
-    image:IMAGES.coding
-  }
-
-];
-
-
-/* =========================================
+/* =========================================================
    REACTION BUTTONS
-========================================= */
+   ========================================================= */
 
-function reactionButtons(
-  type,
-  id
-){
+function reactionButtons(type, id) {
+  const key = safeId(type + "_" + id);
 
   return `
-
-    <div class="react-row">
+    <div class="reaction-row" data-reaction-group="${key}">
 
       <button
-        class="react-btn react-action"
-        data-type="${type}"
-        data-id="${id}"
+        class="reaction-btn like-btn"
+        data-type="${escapeAttr(type)}"
+        data-id="${escapeAttr(id)}"
         data-reaction="like"
       >
-
-        <i class="fa-regular fa-heart"></i>
-
-        Like
-
-        <b>0</b>
-
+        <i class="fa-regular fa-thumbs-up"></i>
+        <span id="like-${key}">0</span>
       </button>
-
 
       <button
-        class="react-btn react-action"
-        data-type="${type}"
-        data-id="${id}"
+        class="reaction-btn dislike-btn"
+        data-type="${escapeAttr(type)}"
+        data-id="${escapeAttr(id)}"
         data-reaction="dislike"
       >
-
         <i class="fa-regular fa-thumbs-down"></i>
-
-        Dislike
-
-        <b>0</b>
-
+        <span id="dislike-${key}">0</span>
       </button>
 
     </div>
-
   `;
-
 }
 
-
-/* =========================================
+/* =========================================================
    RATING
-========================================= */
+   ========================================================= */
 
-function ratingButtons(
-  type,
-  id
-){
+function ratingButtons(type, id) {
+  const key = safeId(type + "_" + id);
 
   return `
+    <div class="rating-row" data-rating-group="${key}">
+      <span class="rating-label">
+        <i class="fa-solid fa-star"></i>
+        Rating
+      </span>
 
-    <div
-      class="rating"
-      data-rating="${type}:${id}"
-    >
+      <div class="rating-stars">
+        ${[1, 2, 3, 4, 5]
+          .map(
+            n => `
+              <button
+                class="star-btn"
+                data-type="${escapeAttr(type)}"
+                data-id="${escapeAttr(id)}"
+                data-rating="${n}"
+                aria-label="${n} star"
+              >
+                <i class="fa-regular fa-star"></i>
+              </button>
+            `
+          )
+          .join("")}
+      </div>
 
-      ${[1,2,3,4,5]
-        .map(number => `
-
-          <button
-            data-rate="${number}"
-            data-type="${type}"
-            data-id="${id}"
-          >
-
-            <i class="fa-solid fa-star"></i>
-
-          </button>
-
-        `)
-        .join("")}
-
+      <span class="rating-value" id="rating-${key}">
+        0.0
+      </span>
     </div>
+  `;
+}
 
+/* =========================================================
+   RENDER APPS
+   ========================================================= */
+
+function renderApps() {
+  const container = $("#appsGrid");
+
+  if (!container) return;
+
+  container.innerHTML = appData
+    .map(
+      item => `
+      <article
+        class="app-card searchable-card"
+        data-search="${escapeAttr(item.title)} ${escapeAttr(
+          item.description
+        )}"
+      >
+
+        ${cardImage(item.image, item.title)}
+
+        <div class="card-body">
+
+          <div class="mini-head">
+
+            <div class="app-icon">
+              <i class="${escapeAttr(item.icon)}"></i>
+            </div>
+
+            <div class="card-title">
+              <b>${escapeHTML(item.title)}</b>
+
+              <span>
+                ${item.download ? "Android APK" : "App • Mobile Ready"}
+              </span>
+            </div>
+
+          </div>
+
+          <p class="card-desc">
+            ${escapeHTML(item.description)}
+          </p>
+
+          <div class="card-actions">
+
+            <a
+              class="action-btn primary"
+              href="${escapeAttr(item.url)}"
+              ${item.download ? "download" : ""}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class="fa-solid fa-download"></i>
+
+              ${item.download ? "Download APK" : "Open / Get"}
+            </a>
+
+            <button
+              class="action-btn comment-open"
+              data-type="app"
+              data-id="${escapeAttr(item.id)}"
+            >
+              <i class="fa-regular fa-comment"></i>
+              Comment
+            </button>
+
+          </div>
+
+          ${reactionButtons("app", item.id)}
+
+          ${ratingButtons("app", item.id)}
+
+        </div>
+      </article>
+    `
+    )
+    .join("");
+
+  bindDynamicEvents();
+}
+
+/* =========================================================
+   RENDER WEBSITES
+   ========================================================= */
+
+function renderWebsites() {
+  const container = $("#websitesGrid");
+
+  if (!container) return;
+
+  container.innerHTML = websiteData
+    .map(
+      item => `
+      <article
+        class="website-card searchable-card"
+        data-search="${escapeAttr(item.title)} ${escapeAttr(
+          item.description
+        )}"
+      >
+
+        ${cardImage(item.image, item.title)}
+
+        <div class="card-body">
+
+          <div class="mini-head">
+
+            <div class="app-icon website-icon">
+              <i class="fa-solid fa-globe"></i>
+            </div>
+
+            <div class="card-title">
+              <b>${escapeHTML(item.title)}</b>
+              <span>Website • Online</span>
+            </div>
+
+          </div>
+
+          <p class="card-desc">
+            ${escapeHTML(item.description)}
+          </p>
+
+          <div class="card-actions">
+
+            <a
+              class="action-btn primary"
+              href="${escapeAttr(item.demo)}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              Visit Website
+            </a>
+
+            <button
+              class="action-btn comment-open"
+              data-type="website"
+              data-id="${escapeAttr(item.id)}"
+            >
+              <i class="fa-regular fa-comment"></i>
+              Comment
+            </button>
+
+          </div>
+
+          ${reactionButtons("website", item.id)}
+
+          ${ratingButtons("website", item.id)}
+
+        </div>
+      </article>
+    `
+    )
+    .join("");
+
+  bindDynamicEvents();
+}
+
+/* =========================================================
+   RENDER PROJECTS
+   ========================================================= */
+
+function renderProjects() {
+  const container = $("#projectsGrid");
+
+  if (!container) return;
+
+  container.innerHTML = projectData
+    .map(
+      item => `
+      <article
+        class="project-card searchable-card"
+        data-search="${escapeAttr(item.title)} ${escapeAttr(
+          item.description
+        )}"
+      >
+
+        ${cardImage(item.image, item.title)}
+
+        <div class="card-body">
+
+          <div class="mini-head">
+
+            <div class="app-icon">
+              <i class="${escapeAttr(item.icon)}"></i>
+            </div>
+
+            <div class="card-title">
+              <b>${escapeHTML(item.title)}</b>
+              <span>Developer Project</span>
+            </div>
+
+          </div>
+
+          <p class="card-desc">
+            ${escapeHTML(item.description)}
+          </p>
+
+          <div class="card-actions">
+
+            <a
+              class="action-btn primary"
+              href="${escapeAttr(item.url || LINKS.github)}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class="fa-brands fa-github"></i>
+              GitHub
+            </a>
+
+            <button
+              class="action-btn comment-open"
+              data-type="project"
+              data-id="${escapeAttr(item.id)}"
+            >
+              <i class="fa-regular fa-comment"></i>
+              Comment
+            </button>
+
+          </div>
+
+          ${reactionButtons("project", item.id)}
+
+          ${ratingButtons("project", item.id)}
+
+        </div>
+      </article>
+    `
+    )
+    .join("");
+
+  bindDynamicEvents();
+}
+
+/* =========================================================
+   GITHUB
+   ========================================================= */
+
+async function loadGitHubRepos() {
+  const container = $("#githubLatest");
+
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="loading-box">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      Loading GitHub projects...
+    </div>
   `;
 
-}
-
-
-/* =========================================
-   DISCOVER RENDER
-========================================= */
-
-function renderDiscover(){
-
-  const container =
-    $("#discoverGrid");
-
-  container.innerHTML =
-    discoverData
-      .map(item => {
-
-        return `
-
-          <article
-            class="social-card searchable-card"
-            data-search="
-              ${escapeHTML(item.title)}
-              ${escapeHTML(item.subtitle)}
-              ${escapeHTML(item.description)}
-            "
-          >
-
-            ${cardImage(
-              item.image,
-              item.title
-            )}
-
-            <div class="card-body">
-
-              <div class="mini-head">
-
-                <div class="platform-icon">
-                  <i class="${item.icon}"></i>
-                </div>
-
-                <div class="card-title">
-
-                  <b>
-                    ${escapeHTML(item.title)}
-                  </b>
-
-                  <span>
-                    ${escapeHTML(item.subtitle)}
-                  </span>
-
-                </div>
-
-              </div>
-
-              <p class="card-desc">
-                ${escapeHTML(item.description)}
-              </p>
-
-              <div class="card-actions">
-
-                <a
-                  class="action-btn primary"
-                  href="${item.url}"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  <i class="fa-solid fa-link"></i>
-                  Open
-                </a>
-
-                <button
-                  class="action-btn comment-open"
-                  data-type="discover"
-                  data-id="${item.id}"
-                >
-                  <i class="fa-regular fa-comment"></i>
-                  Comments
-                </button>
-
-              </div>
-
-              ${reactionButtons(
-                "discover",
-                item.id
-              )}
-
-              ${ratingButtons(
-                "discover",
-                item.id
-              )}
-
-            </div>
-
-          </article>
-
-        `;
-
-      })
-      .join("");
-
-}
-
-
-/* =========================================
-   WEBSITE RENDER
-========================================= */
-
-function renderWebsites(){
-
-  const container =
-    $("#websitesGrid");
-
-  container.innerHTML =
-    websiteData
-      .map(item => {
-
-        return `
-
-          <article
-            class="website-card searchable-card"
-            data-search="
-              ${escapeHTML(item.title)}
-              ${escapeHTML(item.description)}
-            "
-          >
-
-            ${cardImage(
-              item.image,
-              item.title
-            )}
-
-            <div class="card-body">
-
-              <div class="mini-head">
-
-                <div class="platform-icon">
-
-                  <i class="fa-solid fa-globe"></i>
-
-                </div>
-
-                <div class="card-title">
-
-                  <b>
-                    ${escapeHTML(item.title)}
-                  </b>
-
-                  <span>
-                    Website
-                  </span>
-
-                </div>
-
-              </div>
-
-
-              <p class="card-desc">
-
-                ${escapeHTML(
-                  item.description
-                )}
-
-              </p>
-
-
-              <div class="card-actions">
-
-                <a
-                  class="action-btn primary"
-                  href="${item.demo}"
-                  target="_blank"
-                  rel="noopener"
-                >
-
-                  <i class="fa-solid fa-eye"></i>
-
-                  Demo
-
-                </a>
-
-
-                <a
-                  class="action-btn"
-                  href="${LINKS.github}"
-                  target="_blank"
-                  rel="noopener"
-                >
-
-                  <i class="fa-brands fa-github"></i>
-
-                  Source
-
-                </a>
-
-              </div>
-
-
-              ${reactionButtons(
-                "website",
-                item.id
-              )}
-
-
-              ${ratingButtons(
-                "website",
-                item.id
-              )}
-
-
-              <button
-                class="comment-btn comment-open"
-                data-type="website"
-                data-id="${item.id}"
-              >
-
-                <i class="fa-regular fa-comment"></i>
-
-                View / Add Comments
-
-              </button>
-
-            </div>
-
-          </article>
-
-        `;
-
-      })
-      .join("");
-
-}
-
-
-/* =========================================
-   APP RENDER
-========================================= */
-
-function renderApps(){
-
-  const container =
-    $("#appsGrid");
-
-  container.innerHTML =
-    appData
-      .map(item => {
-
-        return `
-
-          <article
-            class="app-card searchable-card"
-            data-search="
-              ${escapeHTML(item.title)}
-              ${escapeHTML(item.description)}
-            "
-          >
-
-            ${cardImage(
-              item.image,
-              item.title
-            )}
-
-            <div class="card-body">
-
-              <div class="mini-head">
-
-                <div class="app-icon">
-
-                  <i class="${item.icon}"></i>
-
-                </div>
-
-                <div class="card-title">
-
-                  <b>
-                    ${escapeHTML(item.title)}
-                  </b>
-
-                  <span>
-                    App • Mobile Ready
-                  </span>
-
-                </div>
-
-              </div>
-
-
-              <p class="card-desc">
-
-                ${escapeHTML(
-                  item.description
-                )}
-
-              </p>
-
-
-              <div class="card-actions">
-
-                <a
-                  class="action-btn primary"
-                  href="${item.url}"
-                  target="_blank"
-                  rel="noopener"
-                >
-
-                  <i class="fa-solid fa-download"></i>
-
-                  Open / Get
-
-                </a>
-
-
-                <button
-                  class="action-btn comment-open"
-                  data-type="app"
-                  data-id="${item.id}"
-                >
-
-                  <i class="fa-regular fa-comment"></i>
-
-                  Comment
-
-                </button>
-
-              </div>
-
-
-              ${reactionButtons(
-                "app",
-                item.id
-              )}
-
-
-              ${ratingButtons(
-                "app",
-                item.id
-              )}
-
-            </div>
-
-          </article>
-
-        `;
-
-      })
-      .join("");
-
-}
-
-
-/* =========================================
-   PROJECT RENDER
-========================================= */
-
-function renderProjects(){
-
-  const container =
-    $("#projectsGrid");
-
-  container.innerHTML =
-    projectData
-      .map(item => {
-
-        return `
-
-          <article
-            class="project-card searchable-card"
-            data-search="
-              ${escapeHTML(item.title)}
-              ${escapeHTML(item.description)}
-            "
-          >
-
-            ${cardImage(
-              item.image,
-              item.title
-            )}
-
-            <div class="card-body">
-
-              <div class="mini-head">
-
-                <div class="project-icon">
-
-                  <i class="${item.icon}"></i>
-
-                </div>
-
-                <div class="card-title">
-
-                  <b>
-                    ${escapeHTML(item.title)}
-                  </b>
-
-                  <span>
-                    Tech Project
-                  </span>
-
-                </div>
-
-              </div>
-
-
-              <p class="card-desc">
-
-                ${escapeHTML(
-                  item.description
-                )}
-
-              </p>
-
-
-              <div class="card-actions">
-
-                <a
-                  class="action-btn primary"
-                  href="${LINKS.github}"
-                  target="_blank"
-                  rel="noopener"
-                >
-
-                  <i class="fa-brands fa-github"></i>
-
-                  GitHub
-
-                </a>
-
-
-                <button
-                  class="action-btn comment-open"
-                  data-type="project"
-                  data-id="${item.id}"
-                >
-
-                  <i class="fa-regular fa-comment"></i>
-
-                  Discuss
-
-                </button>
-
-              </div>
-
-
-              ${reactionButtons(
-                "project",
-                item.id
-              )}
-
-
-              ${ratingButtons(
-                "project",
-                item.id
-              )}
-
-            </div>
-
-          </article>
-
-        `;
-
-      })
-      .join("");
-
-}
-
-
-/* =========================================
-   FIREBASE DATA
-========================================= */
-
-async function getInteraction(
-  type,
-  id
-){
-
-  try{
-
-    const snapshot =
-      await get(
-        ref(
-          db,
-          `interactions/${type}/${id}`
-        )
-      );
-
-    if(
-      snapshot.exists()
-    ){
-
-      return snapshot.val();
-
-    }
-
-  }catch(error){
-
-    console.log(
-      "Firebase read:",
-      error
+  try {
+    const response = await fetch(
+      "https://api.github.com/users/kaviyarasan-1997/repos?sort=updated&direction=desc&per_page=8"
     );
 
+    if (!response.ok) {
+      throw new Error("GitHub API error");
+    }
+
+    const repos = await response.json();
+
+    if (!repos.length) {
+      container.innerHTML = `
+        <div class="empty-box">
+          No GitHub repositories found.
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = repos
+      .map(
+        repo => `
+        <article class="github-card searchable-card"
+          data-search="${escapeAttr(repo.name)} ${escapeAttr(
+            repo.description || ""
+          )}"
+        >
+
+          ${cardImage(IMAGES.coding, repo.name)}
+
+          <div class="card-body">
+
+            <div class="github-title">
+              <i class="fa-brands fa-github"></i>
+              <b>${escapeHTML(repo.name)}</b>
+            </div>
+
+            <p class="card-desc">
+              ${escapeHTML(
+                repo.description || "GitHub development project."
+              )}
+            </p>
+
+            <div class="github-meta">
+
+              ${
+                repo.language
+                  ? `<span>
+                      <i class="fa-solid fa-code"></i>
+                      ${escapeHTML(repo.language)}
+                    </span>`
+                  : ""
+              }
+
+              <span>
+                <i class="fa-solid fa-star"></i>
+                ${repo.stargazers_count || 0}
+              </span>
+
+              <span>
+                <i class="fa-solid fa-code-branch"></i>
+                ${repo.forks_count || 0}
+              </span>
+
+            </div>
+
+            <div class="card-actions">
+
+              <a
+                class="action-btn primary"
+                href="${escapeAttr(repo.html_url)}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i class="fa-brands fa-github"></i>
+                Open GitHub
+              </a>
+
+            </div>
+
+          </div>
+
+        </article>
+      `
+      )
+      .join("");
+
+  } catch (error) {
+    console.error(error);
+
+    container.innerHTML = `
+      <div class="empty-box">
+        <i class="fa-brands fa-github"></i>
+        GitHub projects couldn't be loaded.
+        <button class="retry-btn" id="githubRetry">
+          Retry
+        </button>
+      </div>
+    `;
+
+    $("#githubRetry")?.addEventListener(
+      "click",
+      loadGitHubRepos
+    );
   }
-
-
-  return {
-
-    likes:0,
-
-    dislikes:0,
-
-    ratingTotal:0,
-
-    ratingCount:0,
-
-    ratings:{},
-
-    comments:{}
-
-  };
-
 }
 
+/* =========================================================
+   THEME
+   ========================================================= */
 
-/* =========================================
-   UPDATE UI
-========================================= */
+function applyTheme(theme) {
+  const isLight = theme === "light";
 
-async function updateInteractions(){
+  document.body.classList.toggle("light", isLight);
 
-  for(
-    const button
-    of $$(".react-action")
-  ){
+  localStorage.setItem("info_theme", theme);
 
-    const data =
-      await getInteraction(
+  const metaTheme = document.querySelector(
+    'meta[name="theme-color"]'
+  );
+
+  if (metaTheme) {
+    metaTheme.setAttribute(
+      "content",
+      isLight ? "#ffffff" : "#090b0e"
+    );
+  }
+
+  const themeButton = $("#themeToggle");
+
+  if (themeButton) {
+    themeButton.innerHTML = isLight
+      ? `<i class="fa-solid fa-moon"></i>`
+      : `<i class="fa-solid fa-sun"></i>`;
+  }
+}
+
+function initTheme() {
+  const savedTheme =
+    localStorage.getItem("info_theme") || "dark";
+
+  applyTheme(savedTheme);
+}
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+function showSection(sectionName) {
+  $$(".page-section").forEach(section => {
+    section.classList.remove("active");
+  });
+
+  const target = document.getElementById(
+    sectionName + "Section"
+  );
+
+  if (target) {
+    target.classList.add("active");
+  }
+
+  $$(".bottom-nav button").forEach(btn => {
+    btn.classList.toggle(
+      "active",
+      btn.dataset.section === sectionName
+    );
+  });
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+function initNavigation() {
+  $$(".bottom-nav button").forEach(button => {
+    button.addEventListener("click", () => {
+      const section = button.dataset.section;
+
+      if (section) {
+        showSection(section);
+      }
+    });
+  });
+}
+
+/* =========================================================
+   HEADER SCROLL
+   ========================================================= */
+
+let lastScrollY = window.scrollY;
+
+function initScrollHeader() {
+  const header = $(".top-header");
+
+  if (!header) return;
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      const currentY = window.scrollY;
+
+      if (currentY > lastScrollY && currentY > 90) {
+        header.classList.add("hide-on-scroll");
+      } else {
+        header.classList.remove("hide-on-scroll");
+      }
+
+      lastScrollY = currentY;
+    },
+    { passive: true }
+  );
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+function initSearch() {
+  const searchInput = $("#globalSearch");
+
+  if (!searchInput) return;
+
+  searchInput.addEventListener("input", event => {
+    const query = event.target.value
+      .trim()
+      .toLowerCase();
+
+    $$(".searchable-card").forEach(card => {
+      const text =
+        card.dataset.search?.toLowerCase() || "";
+
+      card.style.display =
+        !query || text.includes(query)
+          ? ""
+          : "none";
+    });
+  });
+}
+
+/* =========================================================
+   FIREBASE INTERACTION PATH
+   ========================================================= */
+
+function interactionPath(type, id) {
+  return ref(
+    db,
+    `interactions/${safeId(type)}/${safeId(id)}`
+  );
+}
+
+/* =========================================================
+   LOAD INTERACTIONS
+   ========================================================= */
+
+function listenInteractions(type, id) {
+  const key = safeId(type + "_" + id);
+
+  onValue(interactionPath(type, id), snapshot => {
+    const data = snapshot.val() || {};
+
+    const likes = Number(data.likes || 0);
+    const dislikes = Number(data.dislikes || 0);
+
+    const likeElement = $(`#like-${key}`);
+    const dislikeElement = $(`#dislike-${key}`);
+    const ratingElement = $(`#rating-${key}`);
+
+    if (likeElement) {
+      likeElement.textContent = likes;
+    }
+
+    if (dislikeElement) {
+      dislikeElement.textContent = dislikes;
+    }
+
+    const ratings = data.ratings || {};
+
+    const values = Object.values(ratings)
+      .map(Number)
+      .filter(value => value >= 1 && value <= 5);
+
+    const average =
+      values.length > 0
+        ? values.reduce((a, b) => a + b, 0) /
+          values.length
+        : 0;
+
+    if (ratingElement) {
+      ratingElement.textContent =
+        average > 0 ? average.toFixed(1) : "0.0";
+    }
+
+    updateReactionUI(type, id, data);
+    updateRatingUI(type, id, data);
+  });
+}
+
+/* =========================================================
+   REACTION UI
+   ========================================================= */
+
+function updateReactionUI(type, id, data) {
+  const saved =
+    localStorage.getItem(
+      `reaction_${safeId(type)}_${safeId(id)}`
+    );
+
+  $$(
+    `.reaction-btn[data-type="${CSS.escape(
+      type
+    )}"][data-id="${CSS.escape(id)}"]`
+  ).forEach(button => {
+    button.classList.toggle(
+      "selected",
+      button.dataset.reaction === saved
+    );
+  });
+}
+
+/* =========================================================
+   RATING UI
+   ========================================================= */
+
+function updateRatingUI(type, id, data) {
+  const saved = Number(
+    localStorage.getItem(
+      `rating_${safeId(type)}_${safeId(id)}`
+    ) || 0
+  );
+
+  $$(
+    `.star-btn[data-type="${CSS.escape(
+      type
+    )}"][data-id="${CSS.escape(id)}"]`
+  ).forEach(button => {
+    const rating = Number(button.dataset.rating);
+
+    button.classList.toggle(
+      "selected",
+      rating <= saved
+    );
+
+    const icon = button.querySelector("i");
+
+    if (icon) {
+      icon.className =
+        rating <= saved
+          ? "fa-solid fa-star"
+          : "fa-regular fa-star";
+    }
+  });
+}
+
+/* =========================================================
+   REACTION
+   ========================================================= */
+
+async function handleReaction(button) {
+  const type = button.dataset.type;
+  const id = button.dataset.id;
+  const reaction = button.dataset.reaction;
+
+  const storageKey =
+    `reaction_${safeId(type)}_${safeId(id)}`;
+
+  const previous =
+    localStorage.getItem(storageKey);
+
+  try {
+    const snapshot = await new Promise(resolve => {
+      onValue(
+        interactionPath(type, id),
+        snap => resolve(snap),
+        {
+          onlyOnce: true
+        }
+      );
+    });
+
+    const data = snapshot.val() || {};
+
+    let likes = Number(data.likes || 0);
+    let dislikes = Number(data.dislikes || 0);
+
+    if (previous === reaction) {
+      if (reaction === "like") {
+        likes = Math.max(0, likes - 1);
+      }
+
+      if (reaction === "dislike") {
+        dislikes = Math.max(0, dislikes - 1);
+      }
+
+      localStorage.removeItem(storageKey);
+    } else {
+      if (previous === "like") {
+        likes = Math.max(0, likes - 1);
+      }
+
+      if (previous === "dislike") {
+        dislikes = Math.max(0, dislikes - 1);
+      }
+
+      if (reaction === "like") {
+        likes++;
+      }
+
+      if (reaction === "dislike") {
+        dislikes++;
+      }
+
+      localStorage.setItem(storageKey, reaction);
+    }
+
+    await update(interactionPath(type, id), {
+      likes,
+      dislikes
+    });
+
+    showToast(
+      reaction === "like"
+        ? "Liked 👍"
+        : "Dislike updated"
+    );
+  } catch (error) {
+    console.error(error);
+    showToast("Something went wrong");
+  }
+}
+
+/* =========================================================
+   RATING
+   ========================================================= */
+
+async function handleRating(button) {
+  const type = button.dataset.type;
+  const id = button.dataset.id;
+  const rating = Number(button.dataset.rating);
+
+  const storageKey =
+    `rating_${safeId(type)}_${safeId(id)}`;
+
+  try {
+    const currentRef =
+      interactionPath(type, id);
+
+    const snapshot = await new Promise(resolve => {
+      onValue(
+        currentRef,
+        snap => resolve(snap),
+        {
+          onlyOnce: true
+        }
+      );
+    });
+
+    const data = snapshot.val() || {};
+    const ratings = data.ratings || {};
+
+    ratings[userId] = rating;
+
+    await update(currentRef, {
+      ratings
+    });
+
+    localStorage.setItem(
+      storageKey,
+      String(rating)
+    );
+
+    showToast(`Rated ${rating}/5 ⭐`);
+  } catch (error) {
+    console.error(error);
+    showToast("Rating failed");
+  }
+}
+
+/* =========================================================
+   COMMENTS
+   ========================================================= */
+
+function openCommentModal(type, id) {
+  const modal = $("#commentModal");
+
+  if (!modal) return;
+
+  modal.dataset.type = type;
+  modal.dataset.id = id;
+
+  const title = $("#commentModalTitle");
+
+  if (title) {
+    title.textContent =
+      "Comments";
+  }
+
+  const input = $("#commentInput");
+
+  if (input) {
+    input.value = "";
+  }
+
+  modal.classList.add("show");
+
+  loadComments(type, id);
+}
+
+function closeCommentModal() {
+  $("#commentModal")?.classList.remove("show");
+}
+
+function loadComments(type, id) {
+  const list = $("#commentsList");
+
+  if (!list) return;
+
+  const commentsRef = ref(
+    db,
+    `interactions/${safeId(type)}/${safeId(id)}/comments`
+  );
+
+  onValue(commentsRef, snapshot => {
+    const comments = snapshot.val() || {};
+
+    const entries = Object.entries(comments);
+
+    if (!entries.length) {
+      list.innerHTML = `
+        <div class="empty-comments">
+          <i class="fa-regular fa-comments"></i>
+          <p>No comments yet.</p>
+          <small>Be the first to comment.</small>
+        </div>
+      `;
+
+      return;
+    }
+
+    list.innerHTML = entries
+      .reverse()
+      .map(([commentId, comment]) => {
+        const name =
+          comment.name ||
+          "InfoTalkies User";
+
+        const text =
+          comment.text || "";
+
+        const time =
+          comment.time || "";
+
+        return `
+          <div class="comment-item">
+
+            <div class="comment-avatar">
+              <i class="fa-solid fa-user"></i>
+            </div>
+
+            <div class="comment-content">
+
+              <div class="comment-top">
+                <b>${escapeHTML(name)}</b>
+                <small>${escapeHTML(time)}</small>
+              </div>
+
+              <p>${escapeHTML(text)}</p>
+
+            </div>
+
+          </div>
+        `;
+      })
+      .join("");
+  });
+}
+
+async function submitComment() {
+  const modal = $("#commentModal");
+
+  if (!modal) return;
+
+  const type = modal.dataset.type;
+  const id = modal.dataset.id;
+
+  const input = $("#commentInput");
+
+  if (!input) return;
+
+  const text = input.value.trim();
+
+  if (!text) {
+    showToast("Type a comment first");
+    return;
+  }
+
+  try {
+    const commentsRef = ref(
+      db,
+      `interactions/${safeId(type)}/${safeId(id)}/comments`
+    );
+
+    const commentRef = push(commentsRef);
+
+    await set(commentRef, {
+      userId,
+      name:
+        localStorage.getItem("info_username") ||
+        "InfoTalkies User",
+      text,
+      time: new Date().toLocaleString("en-IN"),
+      createdAt: Date.now()
+    });
+
+    input.value = "";
+
+    showToast("Comment added 💬");
+  } catch (error) {
+    console.error(error);
+    showToast("Comment failed");
+  }
+}
+
+/* =========================================================
+   DYNAMIC EVENTS
+   ========================================================= */
+
+function bindDynamicEvents() {
+  $$(".reaction-btn").forEach(button => {
+    button.onclick = () =>
+      handleReaction(button);
+  });
+
+  $$(".star-btn").forEach(button => {
+    button.onclick = () =>
+      handleRating(button);
+  });
+
+  $$(".comment-open").forEach(button => {
+    button.onclick = () =>
+      openCommentModal(
         button.dataset.type,
         button.dataset.id
       );
+  });
 
-    const count =
-      button.dataset.reaction === "like"
-        ? data.likes || 0
-        : data.dislikes || 0;
-
-    const number =
-      button.querySelector("b");
-
-    if(number){
-
-      number.textContent =
-        count;
-
-    }
-
-    const saved =
-      localStorage.getItem(
-        `react_${button.dataset.type}_${button.dataset.id}`
-      );
-
-    button.classList.toggle(
-      "active",
-      saved === button.dataset.reaction
-    );
-
-  }
-
-
-  for(
-    const box
-    of $$(".rating")
-  ){
-
-    const [
-      type,
-      id
-    ] =
-      box.dataset.rating.split(":");
-
-
-    const data =
-      await getInteraction(
-        type,
-        id
-      );
-
-
-    const myRating =
-      Number(
-        data.ratings?.[userId] || 0
-      );
-
-
-    box
-      .querySelectorAll(
-        "[data-rate]"
-      )
-      .forEach(button => {
-
-        button.classList.toggle(
-          "active",
-          Number(
-            button.dataset.rate
-          ) <= myRating
-        );
-
-      });
-
-  }
-
+  listenAllInteractions();
 }
 
+/* =========================================================
+   LISTEN ALL
+   ========================================================= */
 
-/* =========================================
-   LIKE / DISLIKE
-========================================= */
+function listenAllInteractions() {
+  appData.forEach(item => {
+    listenInteractions("app", item.id);
+  });
 
-async function react(
-  type,
-  id,
-  reaction
-){
+  websiteData.forEach(item => {
+    listenInteractions("website", item.id);
+  });
 
-  const databaseRef =
-    ref(
-      db,
-      `interactions/${type}/${id}`
-    );
-
-
-  const data =
-    await getInteraction(
-      type,
-      id
-    );
-
-
-  const previous =
-    localStorage.getItem(
-      `react_${type}_${id}`
-    );
-
-
-  data.likes =
-    data.likes || 0;
-
-  data.dislikes =
-    data.dislikes || 0;
-
-
-  if(
-    previous === reaction
-  ){
-
-    if(
-      reaction === "like"
-    ){
-
-      data.likes--;
-
-    }else{
-
-      data.dislikes--;
-
-    }
-
-
-    localStorage.removeItem(
-      `react_${type}_${id}`
-    );
-
-  }else{
-
-    if(previous){
-
-      if(
-        previous === "like"
-      ){
-
-        data.likes--;
-
-      }else{
-
-        data.dislikes--;
-
-      }
-
-    }
-
-
-    if(
-      reaction === "like"
-    ){
-
-      data.likes++;
-
-    }else{
-
-      data.dislikes++;
-
-    }
-
-
-    localStorage.setItem(
-      `react_${type}_${id}`,
-      reaction
-    );
-
-  }
-
-
-  await update(
-    databaseRef,
-    data
-  );
-
-
-  showToast(
-    reaction === "like"
-      ? "Liked ❤️"
-      : "Disliked 👎"
-  );
-
-
-  updateInteractions();
-
+  projectData.forEach(item => {
+    listenInteractions("project", item.id);
+  });
 }
 
-
-/* =========================================
-   RATING
-========================================= */
-
-async function rate(
-  type,
-  id,
-  value
-){
-
-  const databaseRef =
-    ref(
-      db,
-      `interactions/${type}/${id}`
-    );
-
-
-  const data =
-    await getInteraction(
-      type,
-      id
-    );
-
-
-  data.ratings =
-    data.ratings || {};
-
-  data.ratingTotal =
-    data.ratingTotal || 0;
-
-  data.ratingCount =
-    data.ratingCount || 0;
-
-
-  const previous =
-    Number(
-      data.ratings[userId] || 0
-    );
-
-
-  if(previous){
-
-    data.ratingTotal -=
-      previous;
-
-  }else{
-
-    data.ratingCount++;
-
-  }
-
-
-  data.ratingTotal +=
-    value;
-
-  data.ratings[userId] =
-    value;
-
-
-  await update(
-    databaseRef,
-    data
-  );
-
-
-  showToast(
-    `Rated ${value}/5 ⭐`
-  );
-
-
-  updateInteractions();
-
-}
-
-
-/* =========================================
-   COMMENTS
-========================================= */
-
-async function openComments(
-  type,
-  id
-){
-
-  const data =
-    await getInteraction(
-      type,
-      id
-    );
-
-
-  const comments =
-    Object.values(
-      data.comments || {}
-    );
-
-
-  openModal(`
-
-    <h2>
-      <i
-        class="fa-regular fa-comments"
-        style="color:var(--accent)"
-      ></i>
-
-      Comments
-    </h2>
-
-
-    <p
-      class="modal-sub"
-    >
-      Share your thoughts about this item.
-    </p>
-
-
-    <div class="comment-box">
-
-      <textarea
-        id="commentText"
-        placeholder="Write a comment..."
-      ></textarea>
-
-
-      <button
-        class="primary-btn"
-        id="sendComment"
-        style="
-          width:100%;
-          margin-top:8px;
-        "
-      >
-
-        Post Comment
-
-      </button>
-
-    </div>
-
-
-    <div class="comment-list">
-
-      ${
-        comments.length
-
-        ?
-
-        comments
-          .slice(-30)
-          .reverse()
-          .map(comment => `
-
-            <div class="comment-item">
-
-              <b>
-                ${escapeHTML(
-                  comment.user ||
-                  "User"
-                )}
-              </b>
-
-              ${escapeHTML(
-                comment.text || ""
-              )}
-
-            </div>
-
-          `)
-          .join("")
-
-        :
-
-        `<div class="modal-sub">
-          No comments yet.
-        </div>`
-
-      }
-
-    </div>
-
-  `);
-
-
-  $("#sendComment").onclick =
-    async () => {
-
-      const textarea =
-        $("#commentText");
-
-
-      const text =
-        textarea.value.trim();
-
-
-      if(!text){
-
-        showToast(
-          "Write a comment first"
-        );
-
-        return;
-
-      }
-
-
-      await push(
-        ref(
-          db,
-          `interactions/${type}/${id}/comments`
-        ),
-        {
-
-          user:"InfoTalkies User",
-
-          userId:userId,
-
-          text:text,
-
-          createdAt:
-            Date.now()
-
-        }
-      );
-
-
-      showToast(
-        "Comment posted 💬"
-      );
-
-
-      openComments(
-        type,
-        id
-      );
-
-    };
-
-}
-
-
-/* =========================================
+/* =========================================================
    MODAL
-========================================= */
-
-function openModal(content){
-
-  $("#modalContent").innerHTML =
-    content;
-
-  $("#modalBackdrop")
-    .classList
-    .add("show");
-
-}
-
-
-function closeModal(){
-
-  $("#modalBackdrop")
-    .classList
-    .remove("show");
-
-}
-
-
-/* =========================================
-   MENU
-========================================= */
-
-function openMenu(){
-
-  openModal(`
-
-    <h2>
-      More
-    </h2>
-
-    <p class="modal-sub">
-      InfoTalkies controls & connections
-    </p>
-
-
-    <div class="menu-list">
-
-      <button
-        data-action="about"
-      >
-
-        <i
-          class="fa-solid fa-circle-info"
-        ></i>
-
-        About Developer
-
-      </button>
-
-
-      <a
-        href="${LINKS.github}"
-        target="_blank"
-        rel="noopener"
-      >
-
-        <i
-          class="fa-brands fa-github"
-        ></i>
-
-        GitHub
-
-      </a>
-
-
-      <button
-        data-action="settings"
-      >
-
-        <i
-          class="fa-solid fa-sliders"
-        ></i>
-
-        Settings
-
-      </button>
-
-
-      <button
-        data-action="feedback"
-      >
-
-        <i
-          class="fa-regular fa-message"
-        ></i>
-
-        Feedback
-
-      </button>
-
-
-      <button
-        data-action="report"
-      >
-
-        <i
-          class="fa-solid fa-flag"
-        ></i>
-
-        Report Issue
-
-      </button>
-
-    </div>
-
-  `);
-
-}
-
-
-/* =========================================
-   ABOUT
-========================================= */
-
-function openAbout(){
-
-  openModal(`
-
-    <h2>
-      About InfoTalkies
-    </h2>
-
-
-    <p class="modal-sub">
-
-      InfoTalkies is a technology
-      discovery platform for apps,
-      websites, projects, AI updates
-      and useful tech information.
-
-    </p>
-
-
-    <div class="menu-list">
-
-      <a
-        href="${LINKS.portfolio}"
-        target="_blank"
-      >
-
-        <i class="fa-solid fa-user"></i>
-
-        T. Kaviarasan | Portfolio
-
-      </a>
-
-
-      <a
-        href="${LINKS.github}"
-        target="_blank"
-      >
-
-        <i class="fa-brands fa-github"></i>
-
-        GitHub Profile
-
-      </a>
-
-
-      <a
-        href="${LINKS.youtube}"
-        target="_blank"
-      >
-
-        <i class="fa-brands fa-youtube"></i>
-
-        InfoTalkies YouTube
-
-      </a>
-
-
-      <a
-        href="${LINKS.instagram}"
-        target="_blank"
-      >
-
-        <i class="fa-brands fa-instagram"></i>
-
-        InfoTalkies Instagram
-
-      </a>
-
-    </div>
-
-  `);
-
-}
-
-
-/* =========================================
-   SETTINGS
-========================================= */
-
-function openSettings(){
-
-  openModal(`
-
-    <h2>
-      Settings
-    </h2>
-
-
-    <p class="modal-sub">
-
-      Customize your InfoTalkies
-      experience.
-
-    </p>
-
-
-    <div class="settings-group">
-
-      <h4>
-        THEME
-      </h4>
-
-
-      <div class="choice-row">
-
-        <button
-          class="choice"
-          id="darkThemeBtn"
-        >
-
-          🌙 Dark
-
-        </button>
-
-
-        <button
-          class="choice"
-          id="lightThemeBtn"
-        >
-
-          ☀️ Light
-
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <div class="settings-group">
-
-      <h4>
-        ACCENT COLOR
-      </h4>
-
-
-      <div class="choice-row">
-
-        <button
-          class="choice"
-          data-accent="#22c55e"
-        >
-          🟢 Green
-        </button>
-
-
-        <button
-          class="choice"
-          data-accent="#38bdf8"
-        >
-          🔵 Blue
-        </button>
-
-
-        <button
-          class="choice"
-          data-accent="#a78bfa"
-        >
-          🟣 Purple
-        </button>
-
-
-        <button
-          class="choice"
-          data-accent="#f97316"
-        >
-          🟠 Orange
-        </button>
-
-
-        <button
-          class="choice"
-          data-accent="#ef4444"
-        >
-          🔴 Red
-        </button>
-
-      </div>
-
-    </div>
-
-  `);
-
-
-  $("#darkThemeBtn").onclick =
-    () => {
-
-      applyTheme("dark");
-
-      showToast(
-        "Dark theme enabled 🌙"
-      );
-
-    };
-
-
-  $("#lightThemeBtn").onclick =
-    () => {
-
-      applyTheme("light");
-
-      showToast(
-        "Light theme enabled ☀️"
-      );
-
-    };
-
-
-  document
-    .querySelectorAll(
-      "[data-accent]"
-    )
-    .forEach(button => {
-
-      button.onclick =
-        () => {
-
-          const color =
-            button.dataset.accent;
-
-
-          document.documentElement
-            .style
-            .setProperty(
-              "--accent",
-              color
-            );
-
-
-          localStorage.setItem(
-            "info_accent",
-            color
-          );
-
-
-          showToast(
-            "Accent color updated"
-          );
-
-        };
-
-    });
-
-}
-
-
-/* =========================================
-   FEEDBACK / REPORT
-========================================= */
-
-function openForm(type){
-
-  const title =
-    type === "feedback"
-      ? "Send Feedback"
-      : "Report an Issue";
-
-
-  openModal(`
-
-    <h2>
-      ${title}
-    </h2>
-
-
-    <div class="form-group">
-
-      <label>
-        NAME
-      </label>
-
-      <input
-        id="formName"
-        placeholder="Your name"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label>
-        MESSAGE
-      </label>
-
-      <textarea
-        id="formMessage"
-        placeholder="Write here..."
-      ></textarea>
-
-    </div>
-
-
-    <button
-      class="primary-btn"
-      id="submitForm"
-      style="
-        width:100%;
-        margin-top:12px;
-      "
-    >
-
-      Submit
-
-    </button>
-
-  `);
-
-
-  $("#submitForm").onclick =
-    async () => {
-
-      const message =
-        $("#formMessage")
-          .value
-          .trim();
-
-
-      if(!message){
-
-        showToast(
-          "Enter a message"
-        );
-
-        return;
-
-      }
-
-
-      await push(
-
-        ref(
-          db,
-          type === "feedback"
-            ? "feedbacks"
-            : "reports"
-        ),
-
-        {
-
-          name:
-            $("#formName")
-              .value
-              .trim() ||
-            "Anonymous",
-
-          message:
-
-            message,
-
-          userId:
-
-            userId,
-
-          createdAt:
-
-            Date.now()
-
-        }
-
-      );
-
-
-      closeModal();
-
-      showToast(
-        "Submitted successfully"
-      );
-
-    };
-
-}
-
-
-/* =========================================
-   THEME
-========================================= */
-
-function applyTheme(
-  theme
-){
-
-  if(
-    theme === "light"
-  ){
-
-    document.body
-      .classList
-      .add("light");
-
-  }else{
-
-    document.body
-      .classList
-      .remove("light");
-
-  }
-
-
-  localStorage.setItem(
-    "info_theme",
-    theme
+   ========================================================= */
+
+function initModal() {
+  $("#commentClose")?.addEventListener(
+    "click",
+    closeCommentModal
   );
 
+  $("#commentSubmit")?.addEventListener(
+    "click",
+    submitComment
+  );
 
-  const meta =
-    document.querySelector(
-      'meta[name="theme-color"]'
-    );
-
-
-  if(meta){
-
-    meta.setAttribute(
-      "content",
-
-      theme === "light"
-        ? "#f3f6f8"
-        : "#090b0e"
-
-    );
-
-  }
-
+  $("#commentModal")?.addEventListener(
+    "click",
+    event => {
+      if (
+        event.target.id ===
+        "commentModal"
+      ) {
+        closeCommentModal();
+      }
+    }
+  );
 }
 
+/* =========================================================
+   MENU
+   ========================================================= */
 
-/* =========================================
-   NAVIGATION
-========================================= */
+function initMenu() {
+  const menuButton = $("#menuButton");
+  const menu = $("#moreMenu");
 
-function navigate(
-  page
-){
+  if (!menuButton || !menu) return;
 
-  document
-    .querySelectorAll(".page")
-    .forEach(section => {
-
-      section.classList.toggle(
-        "active",
-        section.dataset.page === page
-      );
-
-    });
-
-
-  document
-    .querySelectorAll(".nav-item")
-    .forEach(button => {
-
-      button.classList.toggle(
-        "active",
-        button.dataset.nav === page
-      );
-
-    });
-
-
-  $("#mainScroll")
-    .scrollTo({
-      top:0,
-      behavior:"smooth"
-    });
-
-
-  $("#globalSearch")
-    .value = "";
-
-
-  $("#clearSearch")
-    .style
-    .display = "none";
-
-
-  $("#noResults")
-    .classList
-    .add("hidden");
-
-}
-
-
-/* =========================================
-   SEARCH
-========================================= */
-
-$("#globalSearch")
-  .addEventListener(
-    "input",
-    () => {
-
-      const query =
-        $("#globalSearch")
-          .value
-          .toLowerCase()
-          .trim();
-
-
-      const activePage =
-        document.querySelector(
-          ".page.active"
-        );
-
-
-      const cards =
-        activePage
-          ?.querySelectorAll(
-            ".searchable-card"
-          ) || [];
-
-
-      let found = 0;
-
-
-      cards.forEach(card => {
-
-        const text =
-          (
-            card.dataset.search ||
-            card.textContent
-          )
-          .toLowerCase();
-
-
-        const visible =
-          !query ||
-          text.includes(query);
-
-
-        card.style.display =
-          visible
-            ? ""
-            : "none";
-
-
-        if(visible){
-
-          found++;
-
-        }
-
-      });
-
-
-      $("#clearSearch")
-        .style
-        .display =
-          query
-            ? "grid"
-            : "none";
-
-
-      $("#noResults")
-        .classList
-        .toggle(
-          "hidden",
-          !query || found > 0
-        );
-
+  menuButton.addEventListener(
+    "click",
+    event => {
+      event.stopPropagation();
+      menu.classList.toggle("show");
     }
   );
 
+  document.addEventListener(
+    "click",
+    event => {
+      if (
+        !menu.contains(event.target) &&
+        event.target !== menuButton
+      ) {
+        menu.classList.remove("show");
+      }
+    }
+  );
+}
 
-$("#clearSearch")
-  .onclick = () => {
+/* =========================================================
+   THEME BUTTON
+   ========================================================= */
 
-    $("#globalSearch")
-      .value = "";
+function initThemeButton() {
+  $("#themeToggle")?.addEventListener(
+    "click",
+    () => {
+      const light =
+        document.body.classList.contains(
+          "light"
+        );
 
-    $("#globalSearch")
-      .dispatchEvent(
-        new Event("input")
+      applyTheme(
+        light ? "dark" : "light"
       );
 
+      showToast(
+        light
+          ? "Dark mode enabled"
+          : "Light mode enabled"
+      );
+    }
+  );
+}
+
+/* =========================================================
+   SOCIAL LINKS
+   ========================================================= */
+
+function initSocialLinks() {
+  $$("[data-social]").forEach(button => {
+    button.addEventListener("click", () => {
+      const target =
+        LINKS[button.dataset.social];
+
+      if (target) {
+        window.open(
+          target,
+          "_blank",
+          "noopener,noreferrer"
+        );
+      }
+    });
+  });
+}
+
+/* =========================================================
+   SHARE APP
+   ========================================================= */
+
+async function shareApp() {
+  const shareData = {
+    title: "InfoTalkies",
+    text:
+      "InfoTalkies – Latest Tech News, AI Updates, Apps, Tips & Tricks – All in Tamil",
+    url: window.location.href
   };
 
-
-/* =========================================
-   SCROLL HEADER
-========================================= */
-
-let previousScroll = 0;
-
-
-$("#mainScroll")
-  .addEventListener(
-    "scroll",
-    () => {
-
-      const current =
-        $("#mainScroll")
-          .scrollTop;
-
-
-      const header =
-        $("#topHeader");
-
-
-      if(
-        current >
-        previousScroll + 8
-        &&
-        current > 40
-      ){
-
-        header.style.transform =
-          "translateY(-70px)";
-
-      }
-
-
-      if(
-        current <
-        previousScroll - 8
-      ){
-
-        header.style.transform =
-          "translateY(0)";
-
-      }
-
-
-      previousScroll =
-        current;
-
-    }
-  );
-
-
-/* =========================================
-   CLICK HANDLER
-========================================= */
-
-document.addEventListener(
-  "click",
-  event => {
-
-    const nav =
-      event.target
-        .closest("[data-nav]");
-
-
-    if(nav){
-
-      navigate(
-        nav.dataset.nav
+  try {
+    if (
+      navigator.share &&
+      typeof navigator.share === "function"
+    ) {
+      await navigator.share(
+        shareData
+      );
+    } else {
+      await navigator.clipboard.writeText(
+        window.location.href
       );
 
-      return;
-
-    }
-
-
-    const reactionButton =
-      event.target
-        .closest(".react-action");
-
-
-    if(reactionButton){
-
-      react(
-        reactionButton.dataset.type,
-        reactionButton.dataset.id,
-        reactionButton.dataset.reaction
+      showToast(
+        "App link copied 📋"
       );
-
-      return;
-
     }
-
-
-    const rateButton =
-      event.target
-        .closest("[data-rate]");
-
-
-    if(rateButton){
-
-      rate(
-        rateButton.dataset.type,
-        rateButton.dataset.id,
-        Number(
-          rateButton.dataset.rate
-        )
-      );
-
-      return;
-
+  } catch (error) {
+    if (error?.name !== "AbortError") {
+      showToast("Share failed");
     }
-
-
-    const commentButton =
-      event.target
-        .closest(".comment-open");
-
-
-    if(commentButton){
-
-      openComments(
-        commentButton.dataset.type,
-        commentButton.dataset.id
-      );
-
-      return;
-
-    }
-
-
-    const action =
-      event.target
-        .closest("[data-action]")
-        ?.dataset
-        .action;
-
-
-    if(action === "settings"){
-
-      openSettings();
-
-      return;
-
-    }
-
-
-    if(action === "about"){
-
-      openAbout();
-
-      return;
-
-    }
-
-
-    if(action === "feedback"){
-
-      openForm(
-        "feedback"
-      );
-
-      return;
-
-    }
-
-
-    if(action === "report"){
-
-      openForm(
-        "report"
-      );
-
-      return;
-
-    }
-
-
   }
-);
-
-
-/* =========================================
-   MENU
-========================================= */
-
-$("#menuBtn")
-  .onclick =
-    openMenu;
-
-
-/* =========================================
-   MODAL CLOSE
-========================================= */
-
-$("#modalClose")
-  .onclick =
-    closeModal;
-
-
-$("#modalBackdrop")
-  .onclick =
-    event => {
-
-      if(
-        event.target.id ===
-        "modalBackdrop"
-      ){
-
-        closeModal();
-
-      }
-
-    };
-
-
-/* =========================================
-   GITHUB
-========================================= */
-
-async function loadGitHub(){
-
-  const container =
-    $("#githubHomeGrid");
-
-
-  container.innerHTML = `
-
-    <div class="loading">
-      Loading GitHub...
-    </div>
-
-  `;
-
-
-  try{
-
-    const response =
-      await fetch(
-        "https://api.github.com/users/kaviyarasan-1997/repos?sort=updated&direction=desc&per_page=8"
-      );
-
-
-    if(!response.ok){
-
-      throw new Error(
-        "GitHub error"
-      );
-
-    }
-
-
-    const repositories =
-      await response.json();
-
-
-    const repos =
-      repositories
-        .filter(repo => !repo.fork)
-        .slice(0,6);
-
-
-    if(!repos.length){
-
-      throw new Error(
-        "No repositories"
-      );
-
-    }
-
-
-    container.innerHTML =
-      repos
-        .map(repo => {
-
-          return `
-
-            <article
-              class="repo-card searchable-card"
-              data-search="
-                ${escapeHTML(
-                  repo.name
-                )}
-
-                ${escapeHTML(
-                  repo.description || ""
-                )}
-              "
-            >
-
-              ${cardImage(
-                IMAGES.coding,
-                repo.name
-              )}
-
-
-              <div class="card-body">
-
-                <div class="mini-head">
-
-                  <div class="platform-icon">
-
-                    <i
-                      class="fa-brands fa-github"
-                    ></i>
-
-                  </div>
-
-
-                  <div class="card-title">
-
-                    <b>
-                      ${escapeHTML(
-                        repo.name
-                      )}
-                    </b>
-
-                    <span>
-                      ${escapeHTML(
-                        repo.language ||
-                        "Code"
-                      )}
-                    </span>
-
-                  </div>
-
-                </div>
-
-
-                <p class="card-desc">
-
-                  ${escapeHTML(
-                    repo.description ||
-                    "Open-source project."
-                  )}
-
-                </p>
-
-
-                <div class="card-actions">
-
-                  <a
-                    class="action-btn primary"
-                    href="${repo.html_url}"
-                    target="_blank"
-                    rel="noopener"
-                  >
-
-                    <i
-                      class="fa-brands fa-github"
-                    ></i>
-
-                    Open
-
-                  </a>
-
-                </div>
-
-              </div>
-
-            </article>
-
-          `;
-
-        })
-        .join("");
-
-
-  }catch(error){
-
-    console.log(
-      "GitHub error:",
-      error
-    );
-
-
-    container.innerHTML = `
-
-      <div class="loading">
-
-        GitHub could not be loaded.
-
-        <br><br>
-
-        <a
-          class="primary-btn"
-          href="${LINKS.github}"
-          target="_blank"
-        >
-
-          Open GitHub
-
-        </a>
-
-      </div>
-
-    `;
-
-  }
-
 }
 
+/* =========================================================
+   FEEDBACK / REPORT
+   ========================================================= */
 
-/* =========================================
-   START
-========================================= */
+function openFeedback(type = "feedback") {
+  const subject =
+    type === "report"
+      ? "InfoTalkies Report"
+      : "InfoTalkies Feedback";
 
-renderDiscover();
+  const body =
+    type === "report"
+      ? "Please describe the issue:\n\n"
+      : "My feedback:\n\n";
 
-renderWebsites();
+  window.location.href =
+    `mailto:info@infotalkies.com?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+}
 
-renderApps();
+/* =========================================================
+   TOAST
+   ========================================================= */
 
-renderProjects();
+let toastTimer;
 
-loadGitHub();
+function showToast(message) {
+  let toast = $("#infoToast");
 
-updateInteractions();
-
-
-/* SAVED THEME */
-
-const savedTheme =
-  localStorage.getItem(
-    "info_theme"
-  ) || "dark";
-
-applyTheme(
-  savedTheme
-);
-
-
-/* SAVED ACCENT */
-
-const savedAccent =
-  localStorage.getItem(
-    "info_accent"
-  );
-
-
-if(savedAccent){
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--accent",
-      savedAccent
+  if (!toast) {
+    toast = document.createElement(
+      "div"
     );
 
+    toast.id = "infoToast";
+    toast.className = "info-toast";
+
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = message;
+
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2200);
+}
+
+/* =========================================================
+   PWA / ONLINE STATUS
+   ========================================================= */
+
+function updateOnlineStatus() {
+  const online =
+    navigator.onLine;
+
+  document.body.classList.toggle(
+    "offline",
+    !online
+  );
+
+  if (!online) {
+    showToast(
+      "You are offline"
+    );
+  }
+}
+
+function initNetwork() {
+  window.addEventListener(
+    "online",
+    () => {
+      document.body.classList.remove(
+        "offline"
+      );
+
+      showToast(
+        "Back online ✓"
+      );
+    }
+  );
+
+  window.addEventListener(
+    "offline",
+    () => {
+      document.body.classList.add(
+        "offline"
+      );
+
+      showToast(
+        "No internet connection"
+      );
+    }
+  );
+
+  updateOnlineStatus();
+}
+
+/* =========================================================
+   USER NAME
+   ========================================================= */
+
+function initUserName() {
+  const existing =
+    localStorage.getItem(
+      "info_username"
+    );
+
+  if (existing) return;
+
+  const generated =
+    "InfoTalkies User";
+
+  localStorage.setItem(
+    "info_username",
+    generated
+  );
+}
+
+/* =========================================================
+   HOME SOCIAL CTA
+   ========================================================= */
+
+function setupSocialButtons() {
+  const youtube =
+    $("#youtubeButton");
+
+  const instagram =
+    $("#instagramButton");
+
+  const facebook =
+    $("#facebookButton");
+
+  if (youtube) {
+    youtube.onclick = () =>
+      window.open(
+        LINKS.youtube,
+        "_blank",
+        "noopener,noreferrer"
+      );
+  }
+
+  if (instagram) {
+    instagram.onclick = () =>
+      window.open(
+        LINKS.instagram,
+        "_blank",
+        "noopener,noreferrer"
+      );
+  }
+
+  if (facebook) {
+    facebook.onclick = () =>
+      window.open(
+        LINKS.facebook,
+        "_blank",
+        "noopener,noreferrer"
+      );
+  }
+}
+
+/* =========================================================
+   EXTERNAL LINK SAFETY
+   ========================================================= */
+
+function secureExternalLinks() {
+  $$('a[target="_blank"]').forEach(link => {
+    link.setAttribute(
+      "rel",
+      "noopener noreferrer"
+    );
+  });
+}
+
+/* =========================================================
+   KEYBOARD SHORTCUT
+   ========================================================= */
+
+function initKeyboard() {
+  document.addEventListener(
+    "keydown",
+    event => {
+      if (
+        event.key === "/" &&
+        document.activeElement.tagName !==
+          "INPUT" &&
+        document.activeElement.tagName !==
+          "TEXTAREA"
+      ) {
+        event.preventDefault();
+
+        $("#globalSearch")?.focus();
+      }
+
+      if (event.key === "Escape") {
+        closeCommentModal();
+
+        $("#moreMenu")?.classList.remove(
+          "show"
+        );
+      }
+    }
+  );
+}
+
+/* =========================================================
+   ACTIVE SECTION FROM URL HASH
+   ========================================================= */
+
+function initHashNavigation() {
+  const hash =
+    window.location.hash.replace(
+      "#",
+      ""
+    );
+
+  const validSections = [
+    "home",
+    "discover",
+    "websites",
+    "apps",
+    "projects"
+  ];
+
+  if (
+    validSections.includes(hash)
+  ) {
+    showSection(hash);
+  }
+}
+
+/* =========================================================
+   SERVICE WORKER
+   ========================================================= */
+
+function registerServiceWorker() {
+  if (
+    "serviceWorker" in navigator
+  ) {
+    window.addEventListener(
+      "load",
+      () => {
+        navigator.serviceWorker
+          .register("./sw.js")
+          .catch(error => {
+            console.log(
+              "Service worker not registered:",
+              error
+            );
+          });
+      }
+    );
+  }
+}
+
+/* =========================================================
+   APP INIT
+   ========================================================= */
+
+function initApp() {
+  initUserName();
+
+  initTheme();
+
+  renderApps();
+  renderWebsites();
+  renderProjects();
+
+  loadGitHubRepos();
+
+  initNavigation();
+  initScrollHeader();
+  initSearch();
+
+  initModal();
+  initMenu();
+
+  initThemeButton();
+
+  initSocialLinks();
+  setupSocialButtons();
+
+  initNetwork();
+  initKeyboard();
+
+  secureExternalLinks();
+
+  initHashNavigation();
+
+  registerServiceWorker();
+
+  /* Global share */
+  $("#shareApp")?.addEventListener(
+    "click",
+    shareApp
+  );
+
+  /* Feedback */
+  $("#feedbackButton")?.addEventListener(
+    "click",
+    () => openFeedback("feedback")
+  );
+
+  /* Report */
+  $("#reportButton")?.addEventListener(
+    "click",
+    () => openFeedback("report")
+  );
+
+  console.log(
+    "%cInfoTalkies V3 Loaded ✓",
+    "font-size:16px;font-weight:bold;"
+  );
+}
+
+/* =========================================================
+   START
+   ========================================================= */
+
+if (
+  document.readyState ===
+  "loading"
+) {
+  document.addEventListener(
+    "DOMContentLoaded",
+    initApp
+  );
+} else {
+  initApp();
 }
