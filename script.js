@@ -439,7 +439,7 @@ const appData = [
       "Gaming hub and game collection.",
     icon:"fa-solid fa-gamepad",
     image:IMAGES.gaming,
-    url:LINKS.gamend
+    url:apps/GAMEND.apk
   },
 
   {
